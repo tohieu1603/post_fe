@@ -171,8 +171,8 @@ function BlockItem({ block: rawBlock }: { block: ContentBlock }) {
     case 'faq':
       return (
         <>
-          {block.faqs?.map((faq: { question: string; answer: string }, i: number) => (
-            <FaqBlock key={i} block={{ ...block, question: faq.question, answer: faq.answer }} />
+          {(block.faqs as { question: string; answer: string }[])?.map((faq, i) => (
+            <FaqBlock key={i} block={{ id: block.id + '-' + i, question: faq.question, answer: faq.answer }} />
           ))}
         </>
       );
