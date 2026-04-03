@@ -47,7 +47,8 @@ function normalize(block: any): ContentBlock {
 }
 
 function BlockItem({ block: rawBlock }: { block: ContentBlock }) {
-  const block = normalize(rawBlock);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const block = normalize(rawBlock) as any;
 
   switch (block.type) {
     case 'heading': {
