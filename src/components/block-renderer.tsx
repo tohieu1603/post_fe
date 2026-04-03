@@ -239,7 +239,8 @@ function BlockItem({ block: rawBlock }: { block: ContentBlock }) {
   }
 }
 
-function CodeBlock({ block }: { block: ContentBlock }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function CodeBlock({ block }: { block: any }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -271,7 +272,8 @@ function CodeBlock({ block }: { block: ContentBlock }) {
   );
 }
 
-function FaqBlock({ block }: { block: ContentBlock }) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function FaqBlock({ block }: { block: any }) {
   const [open, setOpen] = useState(false);
   return (
     <details
