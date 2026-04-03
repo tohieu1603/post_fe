@@ -10,18 +10,27 @@ interface NavItem {
   slug: string;
 }
 
-// AI Flash categories — hiển thị trên header nav
-const AI_FLASH_SLUGS = ['model-moi', 'github-hot', 'startup-funding', 'so-sanh', 'huong-dan', 'phan-tich', 'deep-dive', 'tuan-qua'];
+// Danh mục từ API (hiển thị dưới /chuyen-muc/)
+const API_CATEGORY_SLUGS = ['model-moi', 'github-hot'];
+
+// Trang tĩnh (không phải danh mục API)
+interface PageLink {
+  label: string;
+  href: string;
+}
+
+const STATIC_PAGES: PageLink[] = [
+  { label: 'Startup & Funding', href: '/startup-funding' },
+  { label: 'So Sánh', href: '/so-sanh' },
+  { label: 'Hướng Dẫn', href: '/huong-dan' },
+  { label: 'Phân Tích', href: '/phan-tich' },
+  { label: 'Deep Dive', href: '/deep-dive' },
+  { label: 'Tuần Qua', href: '/tuan-qua' },
+];
 
 const FALLBACK_NAV: NavItem[] = [
   { label: 'Model Mới', slug: 'model-moi' },
   { label: 'GitHub Hot', slug: 'github-hot' },
-  { label: 'Startup & Funding', slug: 'startup-funding' },
-  { label: 'So Sánh', slug: 'so-sanh' },
-  { label: 'Hướng Dẫn', slug: 'huong-dan' },
-  { label: 'Phân Tích', slug: 'phan-tich' },
-  { label: 'Deep Dive', slug: 'deep-dive' },
-  { label: 'Tuần Qua', slug: 'tuan-qua' },
 ];
 
 export function Header() {
@@ -41,10 +50,9 @@ export function Header() {
     getNavMenu()
       .then(res => {
         if (res.data?.length) {
-          // Only show AI Flash categories
           const items = res.data
-            .filter((c: any) => AI_FLASH_SLUGS.includes(c.slug))
-            .sort((a: any, b: any) => AI_FLASH_SLUGS.indexOf(a.slug) - AI_FLASH_SLUGS.indexOf(b.slug))
+            .filter((c: any) => API_CATEGORY_SLUGS.includes(c.slug))
+            .sort((a: any, b: any) => API_CATEGORY_SLUGS.indexOf(a.slug) - API_CATEGORY_SLUGS.indexOf(b.slug))
             .map((c: any) => ({ label: c.name, slug: c.slug }));
           if (items.length) setNavItems(items);
         }
@@ -116,7 +124,7 @@ export function Header() {
           AI Vietnam
         </Link>
 
-        {/* Main Links */}
+        {/* Main Links — API categories + static pages */}
         <nav className="hidden lg:flex items-center gap-6 tracking-tight font-medium">
           {navItems.map((item) => {
             const isActive = pathname === `/chuyen-muc/${item.slug}`;
@@ -130,6 +138,21 @@ export function Header() {
                 }
               >
                 {item.label}
+              </Link>
+            );
+          })}
+          {STATIC_PAGES.map((page) => {
+            const isActive = pathname === page.href;
+            return (
+              <Link
+                key={page.href}
+                href={page.href}
+                className={isActive
+                  ? 'text-emerald-700 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 px-1 py-1'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors'
+                }
+              >
+                {page.label}
               </Link>
             );
           })}
@@ -213,6 +236,11 @@ export function Header() {
           {navItems.map(item => (
             <Link key={item.slug} href={`/chuyen-muc/${item.slug}`} className="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 py-2 font-medium" onClick={() => setMenuOpen(false)}>
               {item.label}
+            </Link>
+          ))}
+          {STATIC_PAGES.map(page => (
+            <Link key={page.href} href={page.href} className="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 py-2 font-medium" onClick={() => setMenuOpen(false)}>
+              {page.label}
             </Link>
           ))}
           <div className="flex flex-wrap gap-3 pt-4 border-t border-outline-variant/30">

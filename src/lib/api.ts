@@ -76,6 +76,18 @@ export async function trackEvent(body: { eventType: string; entityType: string; 
   return fetcher<{ success: boolean }>('/api/public/track', { method: 'POST', body: JSON.stringify(body) });
 }
 
+export async function getWeeklyDigest(limit = 50) {
+  return fetcher<{
+    success: boolean;
+    data: {
+      days: { date: string; label: string; posts: Post[] }[];
+      total: number;
+      from: string;
+      to: string;
+    };
+  }>(`/api/public/weekly-digest?limit=${limit}`);
+}
+
 export async function getAuthorBySlug(slug: string) {
   return fetcher<Author>(`/api/authors/slug/${slug}`);
 }

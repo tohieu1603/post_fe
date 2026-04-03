@@ -18,7 +18,37 @@ export function BlockRenderer({ blocks, className = '' }: BlockRendererProps) {
   );
 }
 
-function BlockItem({ block }: { block: ContentBlock }) {
+// Normalize block to handle both ContentBlock (flat) and ContentSection (nested) formats
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function normalize(block: any): ContentBlock {
+  return {
+    ...block,
+    // paragraph/quote/html: content → text
+    text: block.text || block.content || '',
+    // code: content → code
+    code: block.code || block.content || '',
+    // image: nested → flat
+    url: block.url || block.image?.url || '',
+    alt: block.alt || block.image?.alt || '',
+    caption: block.caption || block.image?.caption || '',
+    // list: nested → flat
+    items: block.items || block.list?.items || [],
+    style: block.style || block.list?.type || 'unordered',
+    // table: nested → flat
+    headers: block.headers || block.table?.headers || [],
+    rows: block.rows || block.table?.rows || [],
+    // faq: array → single (render first, or use faqs)
+    question: block.question || block.faqs?.[0]?.question || '',
+    answer: block.answer || block.faqs?.[0]?.answer || '',
+    faqs: block.faqs || (block.question ? [{ question: block.question, answer: block.answer }] : []),
+    // review: nested → flat
+    review: block.review || null,
+  };
+}
+
+function BlockItem({ block: rawBlock }: { block: ContentBlock }) {
+  const block = normalize(rawBlock);
+
   switch (block.type) {
     case 'heading': {
       const level = Math.min(Math.max(block.level ?? 2, 1), 6);
@@ -68,7 +98,7 @@ function BlockItem({ block }: { block: ContentBlock }) {
       if (block.style === 'ordered') {
         return (
           <ol className="space-y-4 my-8 list-decimal list-outside pl-6">
-            {block.items?.map((item, i) => (
+            {block.items?.map((item: string, i: number) => (
               <li key={i} className="leading-relaxed">
                 {item}
               </li>
@@ -78,7 +108,7 @@ function BlockItem({ block }: { block: ContentBlock }) {
       }
       return (
         <ul className="space-y-4 my-8">
-          {block.items?.map((item, i) => (
+          {block.items?.map((item: string, i: number) => (
             <li key={i} className="flex items-start gap-3">
               <span className="material-symbols-outlined text-primary mt-1">check_circle</span>
               <span>{item}</span>
@@ -104,10 +134,10 @@ function BlockItem({ block }: { block: ContentBlock }) {
       return (
         <div className="overflow-hidden rounded-xl border border-outline-variant my-8">
           <table className="w-full text-sm text-left">
-            {block.headers && (
+            {block.headers && block.headers.length > 0 && (
               <thead className="bg-surface-container-high text-on-surface font-bold">
                 <tr>
-                  {block.headers.map((h, i) => (
+                  {block.headers.map((h: string, i: number) => (
                     <th key={i} className="px-6 py-4">
                       {h}
                     </th>
@@ -116,14 +146,14 @@ function BlockItem({ block }: { block: ContentBlock }) {
               </thead>
             )}
             <tbody className="divide-y divide-outline-variant/20">
-              {block.rows?.map((row, ri) => (
+              {block.rows?.map((row: string[], ri: number) => (
                 <tr
                   key={ri}
                   className={`hover:bg-primary/5 transition-colors ${
                     ri % 2 !== 0 ? 'bg-surface-container-low' : ''
                   }`}
                 >
-                  {row.map((cell, ci) => (
+                  {row.map((cell: string, ci: number) => (
                     <td
                       key={ci}
                       className={`px-6 py-4 ${ci === 0 ? 'font-medium' : ''}`}
@@ -139,7 +169,37 @@ function BlockItem({ block }: { block: ContentBlock }) {
       );
 
     case 'faq':
-      return <FaqBlock block={block} />;
+      return (
+        <>
+          {block.faqs?.map((faq: { question: string; answer: string }, i: number) => (
+            <FaqBlock key={i} block={{ ...block, question: faq.question, answer: faq.answer }} />
+          ))}
+        </>
+      );
+
+    case 'review':
+      return (
+        <div className="bg-surface-container-low rounded-xl p-6 my-8 border border-outline-variant/30">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="font-bold text-lg">{block.review?.provider}</span>
+            <span className="text-amber-500 font-bold">{block.review?.rating}/5</span>
+          </div>
+          {block.review?.summary && <p className="text-sm mb-4">{block.review.summary}</p>}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <h5 className="font-bold text-emerald-600 mb-2">Ưu điểm</h5>
+              <ul className="space-y-1">{block.review?.pros?.map((p: string, i: number) => <li key={i} className="text-sm flex gap-2"><span className="text-emerald-500">+</span>{p}</li>)}</ul>
+            </div>
+            <div>
+              <h5 className="font-bold text-red-500 mb-2">Nhược điểm</h5>
+              <ul className="space-y-1">{block.review?.cons?.map((c: string, i: number) => <li key={i} className="text-sm flex gap-2"><span className="text-red-500">-</span>{c}</li>)}</ul>
+            </div>
+          </div>
+        </div>
+      );
+
+    case 'html':
+      return <div className="my-6" dangerouslySetInnerHTML={{ __html: block.text ?? '' }} />;
 
     case 'media-text':
       return (
