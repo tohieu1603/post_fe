@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head><base target="_top"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Quản lý Bài viết - AI Vietnam</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface": "#131b2e",
+                        "surface-container-high": "#e2e7ff",
+                        "secondary": "#565e74",
+                        "tertiary": "#0058be",
+                        "inverse-surface": "#283044",
+                        "inverse-on-surface": "#eef0ff",
+                        "background": "#faf8ff",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#2170e4",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-surface-variant": "#3d4a42",
+                        "on-primary-container": "#f5fff7",
+                        "surface-variant": "#dae2fd",
+                        "surface": "#faf8ff",
+                        "surface-tint": "#006c4a",
+                        "secondary-fixed": "#dae2fd",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#68dba9",
+                        "outline": "#6d7a72",
+                        "primary-container": "#00855d",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#d2d9f4",
+                        "on-secondary-container": "#5c647a",
+                        "on-background": "#131b2e",
+                        "on-tertiary-fixed": "#001a42",
+                        "on-primary-fixed": "#002114",
+                        "tertiary-fixed-dim": "#adc6ff",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#fefcff",
+                        "primary-fixed": "#85f8c4",
+                        "secondary-container": "#dae2fd",
+                        "surface-container-highest": "#dae2fd",
+                        "outline-variant": "#bccac0",
+                        "tertiary-fixed": "#d8e2ff",
+                        "surface-container": "#eaedff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "on-tertiary-fixed-variant": "#004395",
+                        "primary-fixed-dim": "#68dba9",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f2f3ff",
+                        "surface-bright": "#faf8ff",
+                        "primary": "#006948",
+                        "on-primary-fixed-variant": "#005137"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .inner-glow {
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+        }
+        [data-weight="fill"] {
+            font-variation-settings: 'FILL' 1;
+        }
+        table { border-collapse: separate; border-spacing: 0; }
+        .striped-row:nth-child(even) { background-color: #f2f3ff; }
+        .tnum { font-feature-settings: 'tnum' on, 'lnum' on; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar (Command Center) -->
+<aside class="flex flex-col h-screen fixed left-0 top-0 overflow-y-auto bg-[#283044] dark:bg-[#1a1f2e] w-64 shadow-xl z-50">
+<div class="px-6 py-8">
+<div class="flex items-center gap-3 mb-10">
+<div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="cognition" data-weight="fill">cognition</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-white tracking-tight">AI Vietnam</h1>
+<p class="text-xs text-slate-400 font-medium">Hệ thống quản trị</p>
+</div>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center text-slate-400 hover:text-white mx-2 px-4 py-3 group transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span class="label-sm font-medium">Tổng quan</span>
+</a>
+<a class="flex items-center bg-[#059669] text-white rounded-lg shadow-inner-glow mx-2 px-4 py-3 scale-95 active:scale-90 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="article">article</span>
+<span class="label-sm font-medium">Bài viết</span>
+</a>
+<a class="flex items-center text-slate-400 hover:text-white mx-2 px-4 py-3 group transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="group">group</span>
+<span class="label-sm font-medium">Thành viên</span>
+</a>
+<a class="flex items-center text-slate-400 hover:text-white mx-2 px-4 py-3 group transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="forum">forum</span>
+<span class="label-sm font-medium">Bình luận</span>
+</a>
+<a class="flex items-center text-slate-400 hover:text-white mx-2 px-4 py-3 group transition-colors duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="label-sm font-medium">Cài đặt</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-4">
+<button class="w-full bg-white/5 hover:bg-white/10 text-white rounded-xl py-3 px-4 flex items-center justify-center gap-2 transition-all border border-white/10 mb-6">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span class="text-sm font-semibold">Tạo bài viết mới</span>
+</button>
+<div class="border-t border-white/5 pt-4 space-y-1">
+<a class="flex items-center text-slate-400 hover:text-white mx-2 px-4 py-2 text-sm transition-colors" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="help">help</span>
+                    Trợ giúp
+                </a>
+<a class="flex items-center text-slate-400 hover:text-white mx-2 px-4 py-2 text-sm transition-colors" href="#">
+<span class="material-symbols-outlined mr-3 text-lg" data-icon="logout">logout</span>
+                    Đăng xuất
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-8 py-4 sticky top-0 bg-white/80 dark:bg-[#131b2e]/80 backdrop-blur-md z-40 shadow-sm">
+<div class="flex items-center gap-6">
+<h2 class="text-lg font-semibold text-[#131b2e] dark:text-white">Quản lý Bài viết</h2>
+<div class="h-6 w-px bg-slate-200"></div>
+<nav class="flex gap-6">
+<a class="text-[#059669] border-b-2 border-[#059669] pb-1 text-sm font-medium" href="#">Tất cả</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-[#059669] transition-all text-sm font-medium" href="#">Đã xuất bản</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-[#059669] transition-all text-sm font-medium" href="#">Bản nháp</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-[#059669] transition-all text-sm font-medium" href="#">Thùng rác</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-[#059669] hover:bg-[#047857] text-white px-5 py-2 rounded-lg font-semibold text-sm flex items-center gap-2 transition-all shadow-md active:scale-95">
+<span class="material-symbols-outlined text-lg" data-icon="add_circle">add_circle</span>
+                    Tạo bài mới
+                </button>
+<div class="flex items-center gap-2 ml-2">
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-slate-200 cursor-pointer">
+<img alt="Admin Profile" class="w-full h-full object-cover" data-alt="close-up portrait of a professional modern editor in a bright office environment, confident expression, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkAuauAn5N5T5_1pw2kjQHyAORwJg9YCzNnUEE6m1ujXBi-i4hzanXwqBD6pjk1Mocl6YyFf-R7ZXVuGliPHWon2nHtJNv-BmVcFvI30HU1Bh7WAnDs7cxfMGMcfQdT8pkHtlF9OXM1NqbOU2ieEwkWMtL2uO1Pk9h3PxJSl_jSxF1XrdrwYRq1yyi4QSo5aALB-gRL9nDuf_kQPsvc0isZ4WfZQwA0iAfSKmjlsZnHRlMa-d8CU512fe28NaM5Gk8jAn4ZkrW2A"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Search & Filter Bar -->
+<section class="px-8 py-6 bg-surface-container-low">
+<div class="flex flex-wrap items-center gap-4">
+<div class="relative w-[300px]">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 rounded-xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-primary bg-surface-container-lowest text-sm placeholder:text-slate-400 shadow-sm transition-all" placeholder="Tìm kiếm tiêu đề, slug..." type="text"/>
+</div>
+<select class="rounded-xl border-none ring-1 ring-slate-200 bg-surface-container-lowest py-2.5 px-4 text-sm font-medium text-on-surface focus:ring-2 focus:ring-primary shadow-sm min-w-[140px]">
+<option>Trạng thái</option>
+<option>Đã xuất bản</option>
+<option>Bản nháp</option>
+<option>Lưu trữ</option>
+</select>
+<select class="rounded-xl border-none ring-1 ring-slate-200 bg-surface-container-lowest py-2.5 px-4 text-sm font-medium text-on-surface focus:ring-2 focus:ring-primary shadow-sm min-w-[160px]">
+<option>Chuyên mục</option>
+<option>Hướng dẫn</option>
+<option>Tin tức AI</option>
+<option>Kỹ thuật</option>
+</select>
+<select class="rounded-xl border-none ring-1 ring-slate-200 bg-surface-container-lowest py-2.5 px-4 text-sm font-medium text-on-surface focus:ring-2 focus:ring-primary shadow-sm min-w-[140px]">
+<option>Tác giả</option>
+<option>Anh Quân</option>
+<option>Minh Tuấn</option>
+<option>Khánh Linh</option>
+</select>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="calendar_today">calendar_today</span>
+<input class="pl-10 pr-4 py-2.5 rounded-xl border-none ring-1 ring-slate-200 bg-surface-container-lowest text-sm placeholder:text-slate-400 shadow-sm w-48" placeholder="Khoảng thời gian" type="text"/>
+</div>
+<button class="bg-primary-container text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-sm hover:brightness-110 active:scale-95 transition-all">
+                    Lọc
+                </button>
+</div>
+<!-- Bulk Actions -->
+<div class="mt-6 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-slate-400 bg-slate-100 cursor-not-allowed transition-all" disabled="">
+<span class="material-symbols-outlined text-lg" data-icon="publish">publish</span>
+                        Xuất bản
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-slate-400 bg-slate-100 cursor-not-allowed transition-all" disabled="">
+<span class="material-symbols-outlined text-lg" data-icon="archive">archive</span>
+                        Lưu trữ
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-slate-400 bg-slate-100 cursor-not-allowed transition-all" disabled="">
+<span class="material-symbols-outlined text-lg text-error" data-icon="delete">delete</span>
+                        Xoá
+                    </button>
+</div>
+<div class="text-sm text-slate-500 font-medium italic">
+                    Đã chọn <span class="text-primary font-bold">0</span> mục
+                </div>
+</div>
+</section>
+<!-- Table Section -->
+<section class="flex-1 px-8 pb-12 bg-surface-container-low">
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden border border-slate-100">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-slate-50/50 border-b border-slate-200">
+<th class="px-6 py-4 w-12">
+<input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/>
+</th>
+<th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Ảnh bìa</th>
+<th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Tiêu đề</th>
+<th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Chuyên mục</th>
+<th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Tác giả</th>
+<th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Trạng thái</th>
+<th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Ngày tạo</th>
+<th class="px-4 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Lượt xem</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Hành động</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="striped-row hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4"><input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/></td>
+<td class="px-4 py-4">
+<img alt="Thumbnail" class="w-[60px] h-[40px] rounded object-cover bg-slate-200" data-alt="Modern clean software interface screenshot with glowing code and abstract AI network nodes, cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnYv7I5VQ_XVl-Xilnm8BSIDVlKW_cv_GkMeOsrE0S13JGFAWrrcuqkLdQcDCA0MoADO0bLPu_3MJwfi3GND92V9tGV4piqnuRxqEnNguDXALrKMsAs5gjgGksyBPuOZJQuzLAj0NAx5ABxTDUghaQod9amTxXjJk3-wz823DRhVr8gO8gn-QqWc0IstHd_xlaqHor3LAd65jAWjIVaK43YjV3XDBmaB470X-_B2VgBZlWz6aDDj5pOxVquWe4JR5sVGL9SP7UYw"/>
+</td>
+<td class="px-4 py-4">
+<div class="font-bold text-on-surface text-sm">Hướng dẫn Claude Code cho người mới</div>
+<div class="text-xs text-slate-400 mt-0.5">huong-dan-claude-code-cho-nguoi-moi</div>
+</td>
+<td class="px-4 py-4"><span class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold uppercase">Hướng dẫn</span></td>
+<td class="px-4 py-4 text-sm text-slate-600">Anh Quân</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Đã xuất bản
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-500 tnum">12/05/2024</td>
+<td class="px-4 py-4 text-sm font-semibold text-slate-700 tnum">1,245</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="striped-row hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4"><input checked="" class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/></td>
+<td class="px-4 py-4">
+<img alt="Thumbnail" class="w-[60px] h-[40px] rounded object-cover bg-slate-200" data-alt="Comparison graphic between two futuristic processors, neon blue and orange lighting, high-tech aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt31TgwjLBJgd5QgUH8gL9Mfwwy8l_vtBckdES7HLyRKL0Z1sfg_dIaSSgJkOzTpv-n3oESXlKkki_WnaTsnx_6jNXvxdAsGS4HH_xfh5yyW7kCLGkz6FwU0-Xi9tCULhSrZJM5z9f4k1wC3-0RBKd6bnLXDhwrcb8xiwLpbkfgTb5ilH4JfFmea6oz3tP8aKfomOK9wX4xcygsyaNl49lpt5jpH2Dy-aZYuq-k0OGEtBmAtdXoDhvv8E7aA0lOQ5OMPZ80THaBw"/>
+</td>
+<td class="px-4 py-4">
+<div class="font-bold text-on-surface text-sm">So sánh GPT-5 vs Claude 4</div>
+<div class="text-xs text-slate-400 mt-0.5">so-sanh-gpt5-vs-claude4</div>
+</td>
+<td class="px-4 py-4"><span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase">Tin tức AI</span></td>
+<td class="px-4 py-4 text-sm text-slate-600">Minh Tuấn</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[11px] font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Bản nháp
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-500 tnum">11/05/2024</td>
+<td class="px-4 py-4 text-sm font-semibold text-slate-700 tnum">0</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="striped-row hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4"><input checked="" class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/></td>
+<td class="px-4 py-4">
+<img alt="Thumbnail" class="w-[60px] h-[40px] rounded object-cover bg-slate-200" data-alt="Top 10 stylized list with glowing futuristic icons in a dark minimalist grid layout" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRfe_LQt_w8SSkJ9rzhSrXYTKpcM0i9PPRgl5Z2f2mtHjG3JFJsoKP1HzK6d4SNEe9eVvxiy7AXyaVp1JGKob9bvmHzz02An_l37t_N8R8pQAgpRBCH6Yjyez7uu9yBNcMBmnte_ihKIB6FbpylH3U2T_ZJ2DziHD092wIAwEbMgg_gnLL5Tr53OVRPNR7nqxJC0ARb7pujJOAizgHVxKEYUXn1vUSQtH4pF6sRW9DcvJuoeKShWyK7a6dRw0YTKWfQQ3ENb7ymQ"/>
+</td>
+<td class="px-4 py-4">
+<div class="font-bold text-on-surface text-sm">Top 10 công cụ AI 2026</div>
+<div class="text-xs text-slate-400 mt-0.5">top-10-cong-cu-ai-2026</div>
+</td>
+<td class="px-4 py-4"><span class="px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 text-[10px] font-bold uppercase">Tổng hợp</span></td>
+<td class="px-4 py-4 text-sm text-slate-600">Khánh Linh</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Đã xuất bản
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-500 tnum">10/05/2024</td>
+<td class="px-4 py-4 text-sm font-semibold text-slate-700 tnum">3,890</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="striped-row hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4"><input checked="" class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/></td>
+<td class="px-4 py-4">
+<img alt="Thumbnail" class="w-[60px] h-[40px] rounded object-cover bg-slate-200" data-alt="Abstract visualization of neural networks and binary code flowing into a digital brain, glowing cyan and gold" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuWM1Z541tjq71QEXPAVdpeZk8SZrnFh__KMG8rAqEzszSQUtSRCLSLr3iwsHCZcA_XHI6PrClPOOYIH3MS-8phZOYGOSC53gZNIaayd5H2a1yWg20becn0K-32yrCib02YbDdOLSuV8WFOaJnSuVCvwjC1V71Ksuq_CWNrQijKnf0MQ-KbZbFO65Cmw9A8nRTXT9fKVu5LiRYNjKhouExMQb9wDMfhIfiL9H_tgIyD7vzReU_t4noE7KVHuQ9atkzaUedg0nwsg"/>
+</td>
+<td class="px-4 py-4">
+<div class="font-bold text-on-surface text-sm">Lập trình cùng GitHub Copilot Next</div>
+<div class="text-xs text-slate-400 mt-0.5">lap-trinh-cung-github-copilot-next</div>
+</td>
+<td class="px-4 py-4"><span class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold uppercase">Kỹ thuật</span></td>
+<td class="px-4 py-4 text-sm text-slate-600">Hoàng Nam</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 text-[11px] font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Lưu trữ
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-500 tnum">08/05/2024</td>
+<td class="px-4 py-4 text-sm font-semibold text-slate-700 tnum">562</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="striped-row hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4"><input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/></td>
+<td class="px-4 py-4">
+<img alt="Thumbnail" class="w-[60px] h-[40px] rounded object-cover bg-slate-200" data-alt="High-end robotic arm painting on a digital canvas with splashes of vivid colors, sharp focus, creative lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnRgQ5HiJuU9HPxCIbsdlFbCcctjRsxet7wLTiew2Ji6iH_gpcShY6mhRf0losAbbgyoh7-GVz8fcCkrzU7Cm0izMXV6pFO2JGp8Jr6wQya9YUiZW9OAxXfpWj45cTvdIyvpBHXgMp0TsYSUi32Go4H0V7wA27WZbOnm9NhKc2mbvWFtz38jUm69bCPZPbvfhMJcdjeJPwENxmhhylNg4Rw-zYs1KJX-k-7Lq2bbN4lo-5Hy_7BYX1eIpw1sOOF_YvXcArob46uA"/>
+</td>
+<td class="px-4 py-4">
+<div class="font-bold text-on-surface text-sm">Sáng tạo nghệ thuật với Midjourney v7</div>
+<div class="text-xs text-slate-400 mt-0.5">sang-tao-nghe-thuat-voi-midjourney-v7</div>
+</td>
+<td class="px-4 py-4"><span class="px-2.5 py-1 rounded-full bg-orange-50 text-orange-700 text-[10px] font-bold uppercase">Sáng tạo</span></td>
+<td class="px-4 py-4 text-sm text-slate-600">Thùy Dương</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Đã xuất bản
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-500 tnum">07/05/2024</td>
+<td class="px-4 py-4 text-sm font-semibold text-slate-700 tnum">8,210</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 6 -->
+<tr class="striped-row hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4"><input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/></td>
+<td class="px-4 py-4">
+<img alt="Thumbnail" class="w-[60px] h-[40px] rounded object-cover bg-slate-200" data-alt="Futuristic server room with sleek cooling tubes and soft green LED indicators, clean high-tech architecture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJhmH1iKpknYOzwCkbtXE3WqteWjgJ62N4W4zpwmTBQ981Nit6aeHvPphEcJJ5YP3ndBOPxv5G6hu8PlwNbeojFl3WSUsMPt6ajow4Wy5MRccPVbZvTtYe2r4O28iOJ9cYpbaI6q40p-2YBgPiUJWtdFnhuCq25IVJocpIoPF49Uf8_9pn1onmZZde73UqlJbintmA0PtIvhWxVC1ZIXSK_oJK5t1I26fCFa84eL8aXCaiMW-GxoEwSWM6Y6c-TB-AmgNQ6catOg"/>
+</td>
+<td class="px-4 py-4">
+<div class="font-bold text-on-surface text-sm">Xây dựng RAG Pipeline với LlamaIndex</div>
+<div class="text-xs text-slate-400 mt-0.5">xay-dung-rag-pipeline-llama-index</div>
+</td>
+<td class="px-4 py-4"><span class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold uppercase">Kỹ thuật</span></td>
+<td class="px-4 py-4 text-sm text-slate-600">Anh Quân</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Đã xuất bản
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-500 tnum">05/05/2024</td>
+<td class="px-4 py-4 text-sm font-semibold text-slate-700 tnum">1,102</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 7 -->
+<tr class="striped-row hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4"><input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/></td>
+<td class="px-4 py-4">
+<img alt="Thumbnail" class="w-[60px] h-[40px] rounded object-cover bg-slate-200" data-alt="A stylized glowing shield icon representing data privacy and AI ethics, minimalistic vector style on dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjM7ox8kSxvTGLGLYbmRD1WIJWRIehlFrvBXX8HmkBtUgBV67SzjB-tN2SXVfFKBYI_zEvQEiGgv7Gc71IgMjJspNu4CjzcUd_KLpGponoWhOdt8Ij3qJcb06BOYx23JpveoB8hTPuKNZ7YBv15lkpXie6CYCqNVRaMnLC8Vxyyj6haDC2Uqg6kpN1wlObZBORsVnLAVTT3jfxXW-edfLThNcQq2ypIV7L6rCo7rCD3XKjP7cTZmB3Vy6r3nBRoX-QWVg2DKlY0g"/>
+</td>
+<td class="px-4 py-4">
+<div class="font-bold text-on-surface text-sm">Đạo đức trong kỷ nguyên AI tự trị</div>
+<div class="text-xs text-slate-400 mt-0.5">dao-duc-trong-ky-nguyen-ai-tu-tri</div>
+</td>
+<td class="px-4 py-4"><span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase">Quan điểm</span></td>
+<td class="px-4 py-4 text-sm text-slate-600">Khánh Linh</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[11px] font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Bản nháp
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-500 tnum">04/05/2024</td>
+<td class="px-4 py-4 text-sm font-semibold text-slate-700 tnum">0</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 8 -->
+<tr class="striped-row hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4"><input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/></td>
+<td class="px-4 py-4">
+<img alt="Thumbnail" class="w-[60px] h-[40px] rounded object-cover bg-slate-200" data-alt="Macro photo of a human eye with digital data overlay reflecting in the pupil, sharp details, blue and orange tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQvvbVlzbooGbYMtVdgxEnxJItnhqCzGJhpkNL7q-onBGt2_PlpVBMPsoaW22i8j_eEKzMD0RGjzBNbEIArgzalxi47oVfnBQm68hjXhfvhPJEO9VDZZHZYGZpY15Hv9RcM4gAaSssaAtKrL6VPdQHwQ9mKhI51DK0KfsLDCebtSO7McD9AV4hBRSsruZMaw4I6io9Th3rYyBQg4GrX-KnISyRmcnlcqs39iNqbsROoBC3b0tF6yscdzBCD8-CSdNCYX3mgspzCA"/>
+</td>
+<td class="px-4 py-4">
+<div class="font-bold text-on-surface text-sm">Apple Intelligence: Cuộc cách mạng từ từ</div>
+<div class="text-xs text-slate-400 mt-0.5">apple-intelligence-cuoc-cach-mang-tu-tu</div>
+</td>
+<td class="px-4 py-4"><span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase">Tin tức AI</span></td>
+<td class="px-4 py-4 text-sm text-slate-600">Minh Tuấn</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Đã xuất bản
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-500 tnum">01/05/2024</td>
+<td class="px-4 py-4 text-sm font-semibold text-slate-700 tnum">4,520</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 9 -->
+<tr class="striped-row hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4"><input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/></td>
+<td class="px-4 py-4">
+<img alt="Thumbnail" class="w-[60px] h-[40px] rounded object-cover bg-slate-200" data-alt="Modern home workspace with a large curved monitor displaying AI analytics dashboards, soft desk lamp lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLa23XXUxjE-mzghfZA1nMU0mkk6s_p3Yy01ka-9fo2Q_4jsM-LW-FuxvumdXXXi49aRAYWXzxd8eo8wKACbQi_fCL-UeDXv0BnuI70f4lkfhW53Y8Qqn_sH4ulMR2J8HajGw3n-PgTYwhZsPsfkeqvzyR4YPQY3lIY7mRrfLr_IGandGUrY6FqG_LrvWzKe6E6f21qMpTHXJITI7x-Q1cCRt5bEW8nPW7mhKySSHLWGeNB_Gh2AZUwadenu9xTgInCPOvqzFPMg"/>
+</td>
+<td class="px-4 py-4">
+<div class="font-bold text-on-surface text-sm">Tự động hoá quy trình làm việc với n8n</div>
+<div class="text-xs text-slate-400 mt-0.5">tu-dong-hoa-quy-trinh-lam-viec-voi-n8n</div>
+</td>
+<td class="px-4 py-4"><span class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold uppercase">Hướng dẫn</span></td>
+<td class="px-4 py-4 text-sm text-slate-600">Hoàng Nam</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Đã xuất bản
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-500 tnum">28/04/2024</td>
+<td class="px-4 py-4 text-sm font-semibold text-slate-700 tnum">1,870</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Row 10 -->
+<tr class="striped-row hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4"><input class="rounded text-primary focus:ring-primary border-slate-300" type="checkbox"/></td>
+<td class="px-4 py-4">
+<img alt="Thumbnail" class="w-[60px] h-[40px] rounded object-cover bg-slate-200" data-alt="Futuristic glass buildings in a green smart city with flying delivery drones, sunny bright atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-MZpOf5Argde1SpgJhj_govQN83L6EdEqMM4uVH-7FphwsLJBesz3wRE6KW-eTQyDP9F4Exh2nbw6dRnusUVDr9T8-BMLZA3Fmn7ENAcIgAngcAFJBewS-SdAiN5iAg4WQWvqCIHq6iHagacWVbkubsFNBA3gvtPqDCjcSp8EOWTs5iih4-ytsL8SA12dGWATPC0RA1AZne8ESOchhxr8akAdymfwJCYz6yu8R6aA77r4dWV7praKRdsRJz9xSLNMMwwcY3hOQQ"/>
+</td>
+<td class="px-4 py-4">
+<div class="font-bold text-on-surface text-sm">Xu hướng AI tại Việt Nam năm 2024</div>
+<div class="text-xs text-slate-400 mt-0.5">xu-huong-ai-tai-viet-nam-nam-2024</div>
+</td>
+<td class="px-4 py-4"><span class="px-2.5 py-1 rounded-full bg-purple-50 text-purple-700 text-[10px] font-bold uppercase">Xu hướng</span></td>
+<td class="px-4 py-4 text-sm text-slate-600">Anh Quân</td>
+<td class="px-4 py-4">
+<span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold flex items-center w-fit gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Đã xuất bản
+                                </span>
+</td>
+<td class="px-4 py-4 text-sm text-slate-500 tnum">25/04/2024</td>
+<td class="px-4 py-4 text-sm font-semibold text-slate-700 tnum">12,400</td>
+<td class="px-6 py-4 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-1.5 text-slate-400 hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="edit">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-tertiary transition-colors"><span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span></button>
+<button class="p-1.5 text-slate-400 hover:text-error transition-colors"><span class="material-symbols-outlined text-lg" data-icon="delete">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="mt-8 flex items-center justify-between">
+<div class="text-sm text-slate-500">
+                    Hiển thị <span class="font-bold text-on-surface">1-10</span> / <span class="font-bold text-on-surface">245</span> bài viết
+                </div>
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-primary text-white font-bold shadow-md shadow-primary/20">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 font-medium hover:bg-slate-50 transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 font-medium hover:bg-slate-50 transition-colors">3</button>
+<span class="px-2 text-slate-400">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 font-medium hover:bg-slate-50 transition-colors">25</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Footer Shell -->
+<footer class="mt-auto flex justify-between items-center px-8 py-4 ml-64 w-[calc(100%-16rem)] bg-white border-t border-slate-200 fixed bottom-0 z-40">
+<div class="text-[#059669] font-bold text-sm">
+<span class="material-symbols-outlined text-lg align-middle mr-1" data-icon="check_circle">check_circle</span>
+                3 bài đã chọn
+            </div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4 text-slate-500 text-xs font-medium uppercase tracking-wide">
+<a class="hover:underline" href="#">Chính sách</a>
+<a class="hover:underline" href="#">Hỗ trợ kỹ thuật</a>
+</div>
+<div class="text-slate-400 text-xs">
+                    © 2024 AI Vietnam Administrative Control
+                </div>
+</div>
+</footer>
+</main>
+</body></html>

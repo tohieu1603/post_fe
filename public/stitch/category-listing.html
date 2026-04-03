@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head><base target="_top"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ứng dụng AI - AI Vietnam</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "secondary": "#006c4a",
+                "on-tertiary-container": "#523200",
+                "secondary-container": "#82f5c1",
+                "surface-bright": "#f0fdf4",
+                "on-tertiary-fixed": "#2a1700",
+                "on-primary-container": "#00422b",
+                "error": "#ba1a1a",
+                "on-surface": "#131e19",
+                "background": "#f0fdf4",
+                "secondary-fixed-dim": "#68dba9",
+                "surface-container-low": "#eaf7ee",
+                "primary-fixed-dim": "#4edea3",
+                "on-tertiary-fixed-variant": "#653e00",
+                "secondary-fixed": "#85f8c4",
+                "primary": "#006c49",
+                "tertiary": "#855300",
+                "surface-variant": "#d9e6dd",
+                "on-primary-fixed": "#002113",
+                "on-error": "#ffffff",
+                "on-error-container": "#93000a",
+                "primary-container": "#10b981",
+                "surface-container-highest": "#d9e6dd",
+                "tertiary-fixed-dim": "#ffb95f",
+                "outline": "#6c7a71",
+                "tertiary-fixed": "#ffddb8",
+                "on-secondary": "#ffffff",
+                "on-surface-variant": "#3c4a42",
+                "inverse-on-surface": "#e7f4eb",
+                "on-primary-fixed-variant": "#005236",
+                "tertiary-container": "#e29100",
+                "surface-container-lowest": "#ffffff",
+                "surface": "#f0fdf4",
+                "on-primary": "#ffffff",
+                "primary-fixed": "#6ffbbe",
+                "surface-container": "#e4f1e8",
+                "on-background": "#131e19",
+                "inverse-primary": "#4edea3",
+                "surface-tint": "#006c49",
+                "on-secondary-container": "#00714e",
+                "outline-variant": "#bbcabf",
+                "on-tertiary": "#ffffff",
+                "surface-dim": "#d0ddd5",
+                "inverse-surface": "#27332d",
+                "on-secondary-fixed-variant": "#005137",
+                "on-secondary-fixed": "#002114",
+                "surface-container-high": "#deebe3",
+                "error-container": "#ffdad6"
+              },
+              fontFamily: {
+                "headline": ["Inter"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-emerald-50/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center px-8 h-20 max-w-full mx-auto">
+<div class="text-2xl font-bold tracking-tighter text-emerald-900 dark:text-emerald-50 flex items-center gap-2">
+                AI Vietnam
+            </div>
+<nav class="hidden lg:flex items-center gap-6 font-inter body-lg tracking-tight font-medium">
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 transition-colors" href="/chuyen-muc/tin-nhanh">Tin nhanh</a>
+<a class="text-emerald-700 dark:text-emerald-400 font-bold border-b-2 border-emerald-600" href="/chuyen-muc/ung-dung-ai">Ứng dụng AI</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 transition-colors" href="/chuyen-muc/thu-vien-vibecode">Thư viện Vibecode</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 transition-colors" href="/chuyen-muc/chia-se-chuyen-sau">Chia sẻ chuyên sâu</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 transition-colors" href="/chuyen-muc/ai-trends">AI Trends</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 transition-colors" href="/chuyen-muc/cong-cu-ai">Công cụ AI</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-emerald-100/50 rounded-full transition-colors">
+<span class="material-symbols-outlined">light_mode</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-emerald-100/50 rounded-full transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+<div class="hidden sm:flex items-center gap-3">
+<button class="text-slate-600 dark:text-slate-400 hover:text-emerald-600 font-medium px-4 py-2 transition-colors">Login</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-medium hover:bg-secondary-container hover:text-on-secondary-container transition-all scale-95 active:scale-100 shadow-sm">Đăng ký</button>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-32 pb-20 px-8 max-w-7xl mx-auto">
+<!-- Breadcrumb -->
+<nav class="flex items-center gap-2 font-inter text-sm text-slate-500 mb-6">
+<a class="hover:text-primary transition-colors" href="/">Trang chủ</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-on-surface-variant font-medium">Ứng dụng AI</span>
+</nav>
+<!-- Heading Section -->
+<div class="mb-12">
+<h1 class="text-4xl font-extrabold text-slate-900 tracking-tight">Ứng dụng AI</h1>
+<p class="text-lg text-slate-500 mt-3 max-w-2xl">Hướng dẫn dùng AI thực tế: ChatGPT, Claude, Midjourney và các công cụ tối ưu hóa hiệu suất làm việc.</p>
+</div>
+<!-- Filter & Sort Bar -->
+<div class="flex flex-wrap md:flex-nowrap justify-between items-center py-6 border-b border-outline-variant/30 mb-12 gap-4">
+<div class="flex flex-wrap gap-2">
+<button class="bg-primary text-on-primary px-5 py-2 rounded-full text-sm font-semibold shadow-sm hover:brightness-110 transition-all">Tất cả</button>
+<button class="bg-surface-container-low text-secondary px-5 py-2 rounded-full text-sm font-medium hover:bg-secondary-container transition-colors">ChatGPT</button>
+<button class="bg-surface-container-low text-secondary px-5 py-2 rounded-full text-sm font-medium hover:bg-secondary-container transition-colors">Claude</button>
+<button class="bg-surface-container-low text-secondary px-5 py-2 rounded-full text-sm font-medium hover:bg-secondary-container transition-colors">Midjourney</button>
+<button class="bg-surface-container-low text-secondary px-5 py-2 rounded-full text-sm font-medium hover:bg-secondary-container transition-colors">Stable Diffusion</button>
+<button class="bg-surface-container-low text-secondary px-5 py-2 rounded-full text-sm font-medium hover:bg-secondary-container transition-colors">Copilot</button>
+</div>
+<div class="relative inline-block w-48">
+<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-2.5 text-sm appearance-none focus:ring-2 focus:ring-primary focus:border-transparent outline-none cursor-pointer">
+<option>Mới nhất</option>
+<option>Phổ biến nhất</option>
+<option>Cũ nhất</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">unfold_more</span>
+</div>
+</div>
+</div>
+<!-- Main Content -->
+<div class="grid grid-cols-1 lg:grid-cols-10 gap-12">
+<!-- Left: Article Grid -->
+<div class="lg:col-span-7">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<article class="bg-surface-container-lowest group rounded-xl overflow-hidden border border-outline-variant/20 hover:shadow-[0_16px_32px_-8px_rgba(0,108,73,0.08)] transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img alt="ChatGPT interaction" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close up of a computer screen showing advanced ChatGPT interface with vibrant blue and green accents and flowing data visualizations." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZGcXC4CWJ4nSPX6EHKtOZrqeakUjiVXdsag3KGptM3SiUYn3Bky0TmxyqyYjFFukoYqkb-JuKOMQNGeKeEch85dCfVXsTNdVXGrbyppwyxBMai2FXxjigqA292THTa8BBw9SCSyjt3lfPHvbLReBStYf62Mo_LWp8VoO5gGBi2Oq-Y-QAFOqKFbc0kRX7E1ngnR7c93fK6YmMXjUR2LxgKnArITYSl6QMCt6qRufuxZPncM-QCiFeYLn0719XsFbPseZfFzb8NA"/>
+<div class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase">Ứng dụng AI</div>
+</div>
+<div class="p-5">
+<h3 class="text-lg font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-primary transition-colors">10 Prompt ChatGPT giúp bạn viết nội dung marketing chuyên nghiệp</h3>
+<p class="text-sm text-slate-500 mt-2 line-clamp-2">Khám phá bộ khung prompt tối ưu nhất để tạo ra các bài viết thu hút khách hàng chỉ trong vài giây.</p>
+<div class="flex items-center gap-2 mt-5">
+<img alt="Author" class="w-6 h-6 rounded-full object-cover" data-alt="Professional portrait of a male tech journalist with a friendly expression and neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWPcjoK6vOLDIt7fJ_Vov1s5kLjSuFhO9C1IBTTv1C_j-TPV2Wj1A9vhzAiFmb93Rp0sBdJh15nN833jIiPZfKbaE1oyrVLOALoHHXX-Vj7_YvCFi9cTj6_zCUrxEKqbHBenYdIXmMeFKW2-mBEFkRP0RfTwL3Si0gmV9caXpRwmVkT2z9qG3F89Q4iRvNMZdjgxoktt2BaWsxHLDZfmuewFlajBjPTWQX6Ivkf6XDYsCGfmzD8U2PkCIiqaelQfwPcXKFZCbNkQ"/>
+<span class="text-xs font-semibold text-on-surface">Minh Tâm</span>
+<span class="text-xs text-slate-400">• 12/03/2024</span>
+<span class="text-xs text-slate-400">• 5 phút</span>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container-lowest group rounded-xl overflow-hidden border border-outline-variant/20 hover:shadow-[0_16px_32px_-8px_rgba(0,108,73,0.08)] transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img alt="Claude AI" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Elegant abstract visualization of neural networks and machine intelligence with warm amber and soft white tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBisur7LUwKZPhBsnMBPs-ERYEeNEDJTwpGUyRJ1I_ugIRPBJyZMQNynM9IepfJ9gVjJD08aw4MMDXWyRC8Tllye2LBytW1VB6gnBhV9EuLlCruzI9vfMigKtoURmwGakC7rJNRszFolzRIi1nKWBXPLYeWP2yHghXb8Vg11qgdIriGi-IDgZor4Mvy6fM2AKNiL4y1fjK0CiBWjvxDfA7kk2r7Hy4WOtxcNrl3SnfsNHgjxf66v4emi8jh4037FqrO0g0AzECf8Q"/>
+<div class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase">Ứng dụng AI</div>
+</div>
+<div class="p-5">
+<h3 class="text-lg font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-primary transition-colors">Claude 3.5 Sonnet vs GPT-4o: Đâu là trợ lý lập trình tốt nhất hiện nay?</h3>
+<p class="text-sm text-slate-500 mt-2 line-clamp-2">So sánh chi tiết khả năng xử lý code và logic giữa hai mô hình ngôn ngữ lớn mạnh mẽ nhất thị trường.</p>
+<div class="flex items-center gap-2 mt-5">
+<img alt="Author" class="w-6 h-6 rounded-full object-cover" data-alt="Friendly female portrait with a professional look, set against a soft natural outdoor lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcFBSKFt_VHQv2Z2vkkfMvs0uxTOLRZJ5lMpP_Zbh3BCJqnFd0R-wtCjoHrW1xt1l1qNcjayYZn7pXPIJS4qBwXwUfkrHVWeI1s19YrsgcENM16NXnt3rcaeNUJEe_Gk2SEN8FJehIQpPFMqBboPGq55eOtrinMbk3O5Sy2NCoQJezKG3N760Ot0xxiq66odKgQ3Z4BHoG0l4mmEuE3XGHSt1IolUxPbhA0P677bHwlT4y7B9gvGaCMl94BfvSucCUPjE7TrDDHw"/>
+<span class="text-xs font-semibold text-on-surface">Hoàng Anh</span>
+<span class="text-xs text-slate-400">• 11/03/2024</span>
+<span class="text-xs text-slate-400">• 8 phút</span>
+</div>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-surface-container-lowest group rounded-xl overflow-hidden border border-outline-variant/20 hover:shadow-[0_16px_32px_-8px_rgba(0,108,73,0.08)] transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img alt="Midjourney art" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Surreal digital art created by AI featuring a futuristic forest with glowing bioluminescent plants and ethereal lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGCV-pDDqiWaclrqARCum5dXqFKohyMXPKOlSV3ORiT21jGApM2Ol8dl0rK1tRIzcefMkgcRiAMD3MgnVz91b8-JZQ2omiW4HsM8wxw6I1G15COn2UQsXAC60g7w0iVuPMZZ2RbNfR25wRjhayaSZZuC0GTwPDLcW8D1KzHLV7tccl-9v5kV4k5mtv4QxNMo3G6BscMJtNimeFxlfRmp2A6kIWe0LAe1YqR10e2ef1SP_NyRzxKKUU4wb0xMsrhExlanpqIb-bjQ"/>
+<div class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase">Ứng dụng AI</div>
+</div>
+<div class="p-5">
+<h3 class="text-lg font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-primary transition-colors">Cách dùng Midjourney v6 để tạo ảnh chân dung chân thực như thật</h3>
+<p class="text-sm text-slate-500 mt-2 line-clamp-2">Hướng dẫn các tham số --style raw và cách căn chỉnh ánh sáng để có những bức ảnh AI chuyên nghiệp.</p>
+<div class="flex items-center gap-2 mt-5">
+<img alt="Author" class="w-6 h-6 rounded-full object-cover" data-alt="Close-up of a young male creative professional in a modern studio environment with warm lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj_tzhBHNN86u7SO0MumFz5YJRtDekgCvzAPtLVDKkB6LUkFDSK49v2cfwzDJkcecQRrC94xlwwLR2eplz66vBn6yrjWYm4omwHWb3meusREhb99lPCoTKR2wPLToK2xTIivgcbv2ZC7tbKUPrNQvL7r2EnJRhKzu2uN7Sdsx6R68BeDa4e-6ItGuwPW_P0FZ24ywNZDMjOFufkNsfL2WwHy8SlrekBawtRtyeE0fM3S2nVriqDwDOeWbW-52HlKTadJQQFEpeUQ"/>
+<span class="text-xs font-semibold text-on-surface">Quốc Bảo</span>
+<span class="text-xs text-slate-400">• 10/03/2024</span>
+<span class="text-xs text-slate-400">• 12 phút</span>
+</div>
+</div>
+</article>
+<!-- Row 2 -->
+<!-- Repeat for 9 cards total (abbreviated for length, each following same pattern) -->
+<!-- Card 4 -->
+<article class="bg-surface-container-lowest group rounded-xl overflow-hidden border border-outline-variant/20 hover:shadow-[0_16px_32px_-8px_rgba(0,108,73,0.08)] transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img alt="Copilot" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Dynamic workspace with dual monitors showing code and AI assistant interface, shot in cool morning daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqB2DU7RHgHGHWAKPvV8PK2CMJl84xuqsIzcYCR5jI_iuRi3APWDvl8wQQ76qe6DtlFFBIL6wKy1MSmbonMEjMc28EITGWMOOtMWnXc59Kf08aFV5OGAZRX6mEE5BlTiALpggBc0F76oRQY9lNYLAgtQid8OKji3or5vbBuaaW6e4gVyyTOBJEQexp9aOTFHEAkjmB8knz7Qk9EUQCYVWEcfzDVWFiIVfE4_DEpyu4NkkvEBa5dfZ_tPl1jrSoQkhFGQbnZOjqaA"/>
+<div class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase">Ứng dụng AI</div>
+</div>
+<div class="p-5">
+<h3 class="text-lg font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-primary transition-colors">Microsoft Copilot: Tự động hóa Excel và PowerPoint cực nhanh</h3>
+<p class="text-sm text-slate-500 mt-2 line-clamp-2">Tăng 200% hiệu suất công việc văn phòng với những tính năng ẩn của Copilot trong Microsoft 365.</p>
+<div class="flex items-center gap-2 mt-5">
+<img alt="Author" class="w-6 h-6 rounded-full object-cover" data-alt="Portrait of an experienced male analyst in a business casual outfit with soft focus library background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA73dRus6Q6p45kQcXsoW8PRe-EU_XsOdzTeHp2Kuruh5SWG74d10EZOHz-F4Rs3ACJ5YTOamkoKXQCUCIPPR-fM7R3yaCtFDwVIHipfn7bfmNz2YrRz4lfl7xt6DaJBo8lr_IokodjTrZWtxZXLmj_e5yj--hGiuagxrKVfaowMgdZCOo_7C_ajqN3jHqEMOfpxPiQ6MjB313Fje7cDweQmzfqsCR-RvkMULFTl_K-eBhQQ-x8aOOcRpEB3YbRunLGs527VxiPkA"/>
+<span class="text-xs font-semibold text-on-surface">Lê Hải</span>
+<span class="text-xs text-slate-400">• 09/03/2024</span>
+<span class="text-xs text-slate-400">• 6 phút</span>
+</div>
+</div>
+</article>
+<!-- Card 5 -->
+<article class="bg-surface-container-lowest group rounded-xl overflow-hidden border border-outline-variant/20 hover:shadow-[0_16px_32px_-8px_rgba(0,108,73,0.08)] transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img alt="Video AI" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Futuristic video editing software interface with timelines and AI-generated cinematic frames in rich purple and blue." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFTVlIUDQEhEDGS0cvkzjv6uCEvrVvr31gPd5lXedQqQ9ghTxewrJeeOb1nD8lZFsAJd1ZA3QQ3OkAFAnuUDuwAHjxGD7Ylq71rfEo1tdweip4XkUfPlezsb9ZiLoHaT7PWDvUHjSYZTjAaYs_4fUCG2-C9OWzLNkx7kSZ00jMqRaZuR8oBGiFlgq7vqqdyGBkBm4FWl0JmjW16-Ztaw7-hXQxUpg3DnZqHoPZ-Q7aRSCrXV28rtRRdaxFLU4AyWtaJ3Ubsv49Ow"/>
+<div class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase">Ứng dụng AI</div>
+</div>
+<div class="p-5">
+<h3 class="text-lg font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-primary transition-colors">Top 5 công cụ tạo Video từ Text đỉnh nhất năm 2024</h3>
+<p class="text-sm text-slate-500 mt-2 line-clamp-2">Từ Sora đến Luma Dream Machine, cùng trải nghiệm những đột phá mới nhất trong lĩnh vực AI video.</p>
+<div class="flex items-center gap-2 mt-5">
+<img alt="Author" class="w-6 h-6 rounded-full object-cover" data-alt="Close up of a female creative director with a thoughtful expression and soft studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjxmiZyQODLH3TUFHqxTfR8DnIyrRU8iM_jTEhYZ6YnSoSIzTXwFjXdb7-HqX3kH0d9v9mFwjVIsb8O793t2usDan2VNljU3RMJzmizpUstIa-5ZIZsw5Mq-ZduhOgHEea6SP1rFt7RhIPBQOvW5hlzG98BAlW6UxibkcvPVxz3J29goUekl3WtPyV9zeeAnEp3P7dPcK6YJAp3hRSuc0HrY69rPkA0b73vu_f2ww2cRWw4AoLr1PX24tL4AvxjxbE_9qSjJrXBw"/>
+<span class="text-xs font-semibold text-on-surface">Thanh Vy</span>
+<span class="text-xs text-slate-400">• 08/03/2024</span>
+<span class="text-xs text-slate-400">• 10 phút</span>
+</div>
+</div>
+</article>
+<!-- Card 6 -->
+<article class="bg-surface-container-lowest group rounded-xl overflow-hidden border border-outline-variant/20 hover:shadow-[0_16px_32px_-8px_rgba(0,108,73,0.08)] transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img alt="Stable Diffusion" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A complex workstation setup showing deep learning models training on multiple screens with neon green accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmI_GYuw9PN2NtKAPynMGrW-Q_Z69ueFep7povEnlO5ndr_dojkXwc6fsNPSM2Di6Ok2mmPv73qLM_YwsqpjVUjnqeyaoRVBzhdW-SUFWiLbuOIeLtzZDGnKUPXhg3kReNerGbA8z766UMpqe__1wtRQr2Mf2ui5FDWtmJIKbte1tJIE2OmnosbJfj9z79W-rctrCnPZnIb7c91LEwmWx4RjOoe5zSOgQm04DYkCTSjgiiiUpJaQeg2985WN4047jfbF-XZorRuA"/>
+<div class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase">Ứng dụng AI</div>
+</div>
+<div class="p-5">
+<h3 class="text-lg font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-primary transition-colors">Tự cài đặt Stable Diffusion tại nhà để tạo ảnh AI không giới hạn</h3>
+<p class="text-sm text-slate-500 mt-2 line-clamp-2">Hướng dẫn từng bước cấu hình máy tính và cài đặt Automatic1111 để bắt đầu hành trình sáng tạo.</p>
+<div class="flex items-center gap-2 mt-5">
+<img alt="Author" class="w-6 h-6 rounded-full object-cover" data-alt="Portrait of a young male software developer in a modern tech office with bokeh background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXRlQ5NyoofXYSN2ZgC45hrl9APJ5vz00C8I6uwO1JJERlLqT-sEIkDin4KSlPRtL92Hl3zSdunOj2EIE4XBR6N4w_8E_qaEL7st_p22iDR9qQtH0tLU3o2an2g0gA0CnnoZm6ELy5xpfOFqLy06_e8lbQKBcYP3Mfk7k-FJ6ka6kNFmlEF9XHUcIZZ_tT0l6TgXlRMxVGjNu-vd-n16dbbr_nBqKJypEw_46XI_k3bz5coygqHKs_oVThFCFXhY3cBE87CCpDOQ"/>
+<span class="text-xs font-semibold text-on-surface">Tuấn Minh</span>
+<span class="text-xs text-slate-400">• 07/03/2024</span>
+<span class="text-xs text-slate-400">• 15 phút</span>
+</div>
+</div>
+</article>
+<!-- Row 3 -->
+<!-- Card 7 -->
+<article class="bg-surface-container-lowest group rounded-xl overflow-hidden border border-outline-variant/20 hover:shadow-[0_16px_32px_-8px_rgba(0,108,73,0.08)] transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img alt="AI Agent" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Abstract 3D rendering of holographic spheres interacting, representing AI agents and decentralized intelligence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRD8rVAsQJK_WZjbm-72GB5iAgCRAYu80KRw8OIfk9Ow_UD8wZhEKCGkjzHZ6KPOHoHEaH1eR1G9VW81EytVRQDwkO18uQPwpL1xylUcFdttSjgsZ3q05XLMYIMg83DN5JNVMAWXof-HD9VB9lHeH_S2JhIgPVgLmNez-PO934lZXsZ0no01E0nkVuAbpBlTCUK0L7Jwjel6xlBhm6mryratjmH2YDBztZz4eo13WUQLkjtmGkVJHRmLSZBHFdMFipAwklo8LMeA"/>
+<div class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase">Ứng dụng AI</div>
+</div>
+<div class="p-5">
+<h3 class="text-lg font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-primary transition-colors">AI Agent là gì? Tại sao doanh nghiệp cần tích hợp ngay bây giờ?</h3>
+<p class="text-sm text-slate-500 mt-2 line-clamp-2">Tìm hiểu về thế hệ AI tiếp theo không chỉ biết trả lời mà còn biết thực thi các nhiệm vụ phức tạp.</p>
+<div class="flex items-center gap-2 mt-5">
+<img alt="Author" class="w-6 h-6 rounded-full object-cover" data-alt="Professional headshot of a business consultant with a slight smile and professional attire." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCK6lHWSSWaZ2nY0yzq-2MfjIeF69u1eA2JFrcGg0W91qdA-Xl6g0hLf5Oi7Ctiv2qr9eIDKm9ylGnBjRkjTQ7rKBYPjxlbA_6LXzISeCODV_y5bMWmuQ5DSLkfv9hBs21inWMV2BLPfI8ZgwnGQCJwSLgI2RFLawafbb0wzhodNdZNREZiXaWSklZNP_ACexIUowA8mnYhTYq5EHTMbP-WIUGpkJLls09qTZkFo6zcP4lcn4QlDBbewGQeUvgW275iP6mBdlDWgQ"/>
+<span class="text-xs font-semibold text-on-surface">Minh Tâm</span>
+<span class="text-xs text-slate-400">• 06/03/2024</span>
+<span class="text-xs text-slate-400">• 7 phút</span>
+</div>
+</div>
+</article>
+<!-- Card 8 -->
+<article class="bg-surface-container-lowest group rounded-xl overflow-hidden border border-outline-variant/20 hover:shadow-[0_16px_32px_-8px_rgba(0,108,73,0.08)] transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img alt="Prompting" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close up of keyboard keys glowing with green light, symbolizing the act of precise prompt engineering." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkgNyC42D501TGup9x_djqnqTPIuzEmKDLRaJqPqOnniuPyRsGeiCiNIax5u7gfWU551i5yxcxGCEMG1WwgX-eE8d7COPVaXOYt7vUHGcaxAZlppay4jG-O342KtsYneSieuHPMvm8dRwPRtkD08ZIQ00xkMp5A5p_FM-ycmRvkAoqFURwInF1Ml5swiDUCalPNu50cLMiN7925h0AKVPIyNNOsHJgpGO5i-Wqy52l121_a3w-HaCj33DjLmMwObmuZwXeU3S6Sg"/>
+<div class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase">Ứng dụng AI</div>
+</div>
+<div class="p-5">
+<h3 class="text-lg font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-primary transition-colors">Prompt Engineering cơ bản đến nâng cao cho người mới bắt đầu</h3>
+<p class="text-sm text-slate-500 mt-2 line-clamp-2">Làm chủ kỹ năng quan trọng nhất trong kỷ nguyên AI để giao tiếp hiệu quả với mọi mô hình LLM.</p>
+<div class="flex items-center gap-2 mt-5">
+<img alt="Author" class="w-6 h-6 rounded-full object-cover" data-alt="Portrait of a young tech analyst looking confidently at the camera with a bright background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCI6Bp0--qL5ei9Em7vPzmR0CAv_Z-MjMWrIph_8kHry0LFEHjPkkqD6qBVicXhjCHG830OS7Ned9fzE6uQhUnS_bDpJD-P9184rKutnSHGBs6OJkt40zbe-sNA1UQ8Y_36QftDRHmMoqKngTjrKUOyxXEcuYM44THfhIT0-0A4QQppEfECfF3AXbqzZC5CzwZ-hbmlhQI0E7282B0zhGD57Y1vSmDip8Jhddvmxj4HeZMC8B8wYdF_SnunsZXPO7n13udvx-uxEw"/>
+<span class="text-xs font-semibold text-on-surface">Hoàng Anh</span>
+<span class="text-xs text-slate-400">• 05/03/2024</span>
+<span class="text-xs text-slate-400">• 9 phút</span>
+</div>
+</div>
+</article>
+<!-- Card 9 -->
+<article class="bg-surface-container-lowest group rounded-xl overflow-hidden border border-outline-variant/20 hover:shadow-[0_16px_32px_-8px_rgba(0,108,73,0.08)] transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img alt="AI Marketing" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="High-tech marketing dashboard with data charts, customer avatars, and glowing AI icons in a sleek interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkex1HxE_uHDpI7J0QsU1isDUod5Rv84ZmXSl_5YbhiO_lRGtzmfTEYrKaOupt4xZjoSseYYMHH4uQKVszpSNyNhvH25sRTArwsBuEU_iPyfJqaoP2v87VSasDwBFgaWbs_t7HpIQR-CgkWS03cDR4ZL0oJRaAm1FJyp4w4YN27pJ5dD8hp4Hw6etMGUn0TvJy3D2w8_wZInB0Ue2ibSbvwstrGN8EKuyek4aNkrvUky-RO08CQVEtLFCkMa40xii8dJ4350wCXA"/>
+<div class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase">Ứng dụng AI</div>
+</div>
+<div class="p-5">
+<h3 class="text-lg font-bold text-slate-900 leading-snug line-clamp-2 group-hover:text-primary transition-colors">Cách xây dựng hệ thống Content Automation bằng Make và OpenAI</h3>
+<p class="text-sm text-slate-500 mt-2 line-clamp-2">Xây dựng quy trình tự động hóa xuất bản nội dung đa kênh mà vẫn giữ được chất lượng cao.</p>
+<div class="flex items-center gap-2 mt-5">
+<img alt="Author" class="w-6 h-6 rounded-full object-cover" data-alt="Friendly male face with glasses in a professional studio setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8MVG4_WDv3auYSCi4cOKVTFsetChxzXjHJv87mPJ_vIYOUS9zqik-sgMU-_pvtq0AQxOdLE1-envBOJCmFXTUuoAAmD-0gqEoSV2_GBTTewckmmZTDZrRnKsmoJaWkFUSJhMBL0bs0HoG8-y-OjVCL5skFu2fKFdyGpMMOcZjo9BYjLKUSC4NhVokKxUCHh-L4Z0Wg8_hMqUzP110QxY1mLXF_Uy3av2VXjRC74efgu09QnD8yBtXde339QKmHIxEeVvOaazM8g"/>
+<span class="text-xs font-semibold text-on-surface">Quốc Bảo</span>
+<span class="text-xs text-slate-400">• 04/03/2024</span>
+<span class="text-xs text-slate-400">• 11 phút</span>
+</div>
+</div>
+</article>
+</div>
+<!-- Pagination -->
+<div class="mt-16 flex justify-center items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-600 hover:bg-emerald-100 transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-on-primary font-bold shadow-md">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-600 hover:bg-emerald-100 font-medium transition-colors">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-600 hover:bg-emerald-100 font-medium transition-colors">3</button>
+<span class="text-slate-400 px-2">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-600 hover:bg-emerald-100 font-medium transition-colors">10</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg text-slate-600 hover:bg-emerald-100 transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Right: Sidebar -->
+<aside class="lg:col-span-3 space-y-10">
+<!-- Popular Widget -->
+<div class="bg-surface-container-low p-8 rounded-2xl border border-outline-variant/30 shadow-sm">
+<h4 class="text-xl font-bold text-slate-900 mb-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">trending_up</span>
+                        Phổ biến nhất
+                    </h4>
+<div class="space-y-8">
+<div class="flex gap-4 group cursor-pointer">
+<span class="text-4xl font-extrabold text-outline-variant leading-none group-hover:text-primary transition-colors">01</span>
+<div>
+<h5 class="text-sm font-bold text-slate-900 line-clamp-2 leading-tight group-hover:text-primary transition-colors">ChatGPT Search chính thức ra mắt, đối đầu trực diện Google</h5>
+<p class="text-xs text-slate-400 mt-1">2 giờ trước</p>
+</div>
+</div>
+<div class="flex gap-4 group cursor-pointer">
+<span class="text-4xl font-extrabold text-outline-variant leading-none group-hover:text-primary transition-colors">02</span>
+<div>
+<h5 class="text-sm font-bold text-slate-900 line-clamp-2 leading-tight group-hover:text-primary transition-colors">Hướng dẫn Jailbreak ChatGPT an toàn để nghiên cứu</h5>
+<p class="text-xs text-slate-400 mt-1">5 giờ trước</p>
+</div>
+</div>
+<div class="flex gap-4 group cursor-pointer">
+<span class="text-4xl font-extrabold text-outline-variant leading-none group-hover:text-primary transition-colors">03</span>
+<div>
+<h5 class="text-sm font-bold text-slate-900 line-clamp-2 leading-tight group-hover:text-primary transition-colors">Top 10 Prompt cho designer sáng tạo logo độc bản</h5>
+<p class="text-xs text-slate-400 mt-1">1 ngày trước</p>
+</div>
+</div>
+<div class="flex gap-4 group cursor-pointer">
+<span class="text-4xl font-extrabold text-outline-variant leading-none group-hover:text-primary transition-colors">04</span>
+<div>
+<h5 class="text-sm font-bold text-slate-900 line-clamp-2 leading-tight group-hover:text-primary transition-colors">Cách AI đang thay đổi ngành lập trình tại Việt Nam</h5>
+<p class="text-xs text-slate-400 mt-1">2 ngày trước</p>
+</div>
+</div>
+<div class="flex gap-4 group cursor-pointer">
+<span class="text-4xl font-extrabold text-outline-variant leading-none group-hover:text-primary transition-colors">05</span>
+<div>
+<h5 class="text-sm font-bold text-slate-900 line-clamp-2 leading-tight group-hover:text-primary transition-colors">Sora AI: Khi nào người dùng phổ thông mới được trải nghiệm?</h5>
+<p class="text-xs text-slate-400 mt-1">3 ngày trước</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Tags Cloud -->
+<div class="bg-surface-container-low p-8 rounded-2xl border border-outline-variant/30">
+<h4 class="text-sm font-bold text-on-surface-variant uppercase tracking-widest mb-6">Chủ đề nổi bật</h4>
+<div class="flex flex-wrap gap-2">
+<a class="px-4 py-1.5 bg-surface-container-lowest border border-outline-variant/20 rounded-full text-xs font-medium text-slate-600 hover:border-primary hover:text-primary transition-all" href="#">AI Marketing</a>
+<a class="px-4 py-1.5 bg-surface-container-lowest border border-outline-variant/20 rounded-full text-xs font-medium text-slate-600 hover:border-primary hover:text-primary transition-all" href="#">Prompt Engineering</a>
+<a class="px-4 py-1.5 bg-surface-container-lowest border border-outline-variant/20 rounded-full text-xs font-medium text-slate-600 hover:border-primary hover:text-primary transition-all" href="#">Automation</a>
+<a class="px-4 py-1.5 bg-surface-container-lowest border border-outline-variant/20 rounded-full text-xs font-medium text-slate-600 hover:border-primary hover:text-primary transition-all" href="#">LLMs</a>
+<a class="px-4 py-1.5 bg-surface-container-lowest border border-outline-variant/20 rounded-full text-xs font-medium text-slate-600 hover:border-primary hover:text-primary transition-all" href="#">Data Science</a>
+<a class="px-4 py-1.5 bg-surface-container-lowest border border-outline-variant/20 rounded-full text-xs font-medium text-slate-600 hover:border-primary hover:text-primary transition-all" href="#">Ethics AI</a>
+</div>
+</div>
+<!-- Hỏi AI Button -->
+<div class="p-1 rounded-2xl bg-gradient-to-br from-primary to-primary-container shadow-lg">
+<button class="w-full bg-surface-container-lowest py-6 px-4 rounded-[14px] flex flex-col items-center text-center group hover:bg-emerald-50 transition-colors">
+<span class="material-symbols-outlined text-4xl text-primary mb-3 group-hover:scale-110 transition-transform" style="font-variation-settings: 'FILL' 1;">chat</span>
+<span class="text-lg font-bold text-slate-900">Đặt câu hỏi cho AI trợ lý</span>
+<p class="text-xs text-slate-500 mt-2">Nhận giải đáp về mọi ứng dụng AI ngay lập tức</p>
+</button>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-emerald-50 dark:bg-slate-900 w-full py-16 px-8 mt-20">
+<div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+<div class="space-y-6">
+<div class="text-xl font-bold text-emerald-900 dark:text-emerald-100">AI Vietnam</div>
+<p class="font-inter text-sm leading-relaxed text-slate-500 dark:text-slate-400">Nền tảng kiến thức AI hàng đầu dành cho cộng đồng người Việt. Cập nhật, phân tích và hướng dẫn ứng dụng trí tuệ nhân tạo vào đời sống.</p>
+<div class="flex gap-4">
+<a class="text-slate-400 hover:text-emerald-600 transition-colors" href="#"><span class="material-symbols-outlined">share</span></a>
+<a class="text-slate-400 hover:text-emerald-600 transition-colors" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+</div>
+</div>
+<div class="space-y-6">
+<h5 class="text-sm font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-widest">Khám phá</h5>
+<ul class="space-y-3 font-inter text-sm">
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-emerald-500 transition-colors" href="/chuyen-muc/tin-nhanh">Tin nhanh</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-emerald-500 transition-colors" href="/chuyen-muc/huong-dan-a-z">Hướng dẫn A-Z</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-emerald-500 transition-colors" href="/chuyen-muc/ai-cho-doanh-nghiep">AI cho DN</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-emerald-500 transition-colors" href="#">Chuyên mục</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<h5 class="text-sm font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-widest">Tài khoản</h5>
+<ul class="space-y-3 font-inter text-sm">
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-emerald-500 transition-colors" href="#">Đăng ký thành viên</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-emerald-500 transition-colors" href="#">Quyền lợi VIP</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-emerald-500 transition-colors" href="#">Lịch sử bài viết</a></li>
+<li><a class="text-slate-500 dark:text-slate-400 hover:text-emerald-500 transition-colors" href="#">Kết nối</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<h5 class="text-sm font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-widest">Đăng ký bản tin</h5>
+<p class="font-inter text-sm text-slate-500 dark:text-slate-400">Nhận những cập nhật mới nhất về thế giới AI mỗi tuần.</p>
+<form class="flex gap-2">
+<input class="flex-1 bg-surface border border-outline-variant rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none" placeholder="Email của bạn" type="email"/>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-bold hover:brightness-110 transition-all">Gửi</button>
+</form>
+</div>
+</div>
+<div class="max-w-7xl mx-auto border-t border-outline-variant/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="font-inter text-xs text-slate-500 dark:text-slate-400 opacity-80">© 2026 AI Vietnam. The Digital Curator.</div>
+<div class="flex gap-6 font-inter text-xs text-slate-500 dark:text-slate-400">
+<a class="hover:text-emerald-500" href="#">Chính sách bảo mật</a>
+<a class="hover:text-emerald-500" href="#">Điều khoản sử dụng</a>
+<a class="hover:text-emerald-500" href="#">Về chúng tôi</a>
+</div>
+</div>
+</footer>
+<!-- SideNavBar (AI Support FAB) -->
+<div class="fixed bottom-8 right-8 z-[100] group">
+<div class="flex items-center justify-center w-16 h-16 rounded-full bg-emerald-600 dark:bg-emerald-500 text-white shadow-[0_16px_32px_-8px_rgba(0,108,73,0.3)] cursor-pointer animate-pulse transition-all hover:scale-110 hover:brightness-110">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">chat</span>
+</div>
+<div class="absolute bottom-20 right-0 w-64 bg-surface-container-lowest rounded-2xl shadow-2xl border border-outline-variant/20 p-4 opacity-0 scale-95 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-xs uppercase">AI</div>
+<div>
+<div class="text-sm font-bold text-slate-900">Hỗ trợ AI</div>
+<div class="text-[10px] text-emerald-600 font-medium">Trực tuyến 24/7</div>
+</div>
+</div>
+<p class="text-xs text-slate-500 mb-4">Chào bạn! Tôi có thể giúp gì cho bạn về các công cụ AI không?</p>
+<button class="w-full bg-primary text-on-primary py-2 rounded-lg text-xs font-bold hover:brightness-110 transition-all">Chat ngay</button>
+</div>
+</div>
+</body></html>

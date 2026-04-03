@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head><base target="_top"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Vietnam | Hướng dẫn dùng Claude Code hiệu quả cho lập trình viên</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-fixed-variant": "#005137",
+              "secondary-container": "#82f5c1",
+              "error": "#ba1a1a",
+              "surface-container": "#e4f1e8",
+              "on-primary": "#ffffff",
+              "on-error-container": "#93000a",
+              "background": "#f0fdf4",
+              "outline": "#6c7a71",
+              "surface-container-lowest": "#ffffff",
+              "surface-container-highest": "#d9e6dd",
+              "secondary-fixed-dim": "#68dba9",
+              "outline-variant": "#bbcabf",
+              "on-tertiary-fixed-variant": "#653e00",
+              "primary-container": "#10b981",
+              "on-surface-variant": "#3c4a42",
+              "error-container": "#ffdad6",
+              "surface-variant": "#d9e6dd",
+              "surface-container-low": "#eaf7ee",
+              "tertiary": "#855300",
+              "on-tertiary-fixed": "#2a1700",
+              "tertiary-fixed-dim": "#ffb95f",
+              "surface-container-high": "#deebe3",
+              "primary-fixed": "#6ffbbe",
+              "on-tertiary": "#ffffff",
+              "inverse-on-surface": "#e7f4eb",
+              "on-secondary-fixed": "#002114",
+              "tertiary-fixed": "#ffddb8",
+              "inverse-primary": "#4edea3",
+              "on-secondary": "#ffffff",
+              "on-primary-fixed-variant": "#005236",
+              "on-error": "#ffffff",
+              "inverse-surface": "#27332d",
+              "tertiary-container": "#e29100",
+              "on-tertiary-container": "#523200",
+              "primary": "#006c49",
+              "primary-fixed-dim": "#4edea3",
+              "on-secondary-container": "#00714e",
+              "on-primary-container": "#00422b",
+              "on-surface": "#131e19",
+              "surface-dim": "#d0ddd5",
+              "on-background": "#131e19",
+              "surface": "#f0fdf4",
+              "secondary": "#006c4a",
+              "on-primary-fixed": "#002113",
+              "secondary-fixed": "#85f8c4",
+              "surface-tint": "#006c49",
+              "surface-bright": "#f0fdf4"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .toc-link.active {
+        background-color: #eaf7ee;
+        border-left: 4px solid #006c49;
+        color: #006c49;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+</head>
+<body class="bg-background text-on-background">
+<!-- Top Navigation Bar -->
+<nav class="bg-emerald-50/80 dark:bg-emerald-950/80 backdrop-blur-md sticky top-0 z-50 w-full h-16 flex justify-between items-center px-6 md:px-12 max-w-screen-2xl mx-auto tonal-shift">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-black text-emerald-900 dark:text-emerald-50 tracking-tighter">AI VIETNAM</span>
+<div class="hidden md:flex gap-6">
+<a class="text-emerald-600/70 dark:text-emerald-400/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors font-inter tracking-tight" href="#">Tech</a>
+<a class="text-emerald-600/70 dark:text-emerald-400/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors font-inter tracking-tight" href="#">Ethics</a>
+<a class="text-emerald-600/70 dark:text-emerald-400/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors font-inter tracking-tight" href="#">Policy</a>
+<a class="text-emerald-800 dark:text-emerald-200 border-b-2 border-emerald-700 dark:border-emerald-400 pb-1 font-inter tracking-tight" href="#">Tutorials</a>
+<a class="text-emerald-600/70 dark:text-emerald-400/70 hover:text-emerald-900 dark:hover:text-emerald-50 transition-colors font-inter tracking-tight" href="#">Research</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-1.5 gap-2">
+<span class="material-symbols-outlined text-on-surface-variant scale-75">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-32 focus:w-64 transition-all" placeholder="Tìm kiếm AI..." type="text"/>
+</div>
+<span class="material-symbols-outlined text-emerald-700 dark:text-emerald-400 cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-emerald-700 dark:text-emerald-400 cursor-pointer">account_circle</span>
+</div>
+</nav>
+<main class="max-w-screen-2xl mx-auto px-6 md:px-12 py-8">
+<!-- Breadcrumb -->
+<nav class="flex text-on-surface-variant text-sm mb-8 gap-2 font-medium">
+<a class="hover:text-primary transition-colors" href="/">Trang chủ</a>
+<span>&gt;</span>
+<a class="hover:text-primary transition-colors" href="/chuyen-muc/ung-dung-ai">Ứng dụng AI</a>
+<span>&gt;</span>
+<span class="text-on-surface truncate max-w-xs">Hướng dẫn dùng Claude Code hiệu quả.</span>
+</nav>
+<!-- Article Header -->
+<header class="mb-10">
+<h1 class="text-4xl md:text-5xl font-extrabold text-on-background leading-tight mb-8 tracking-tighter">Hướng dẫn dùng Claude Code hiệu quả cho lập trình viên Việt Nam</h1>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-outline-variant/30">
+<div class="flex items-center gap-4">
+<img alt="Lê Minh Khoa" class="w-10 h-10 rounded-full object-cover" data-alt="Close up portrait of a young professional male developer with friendly expression, clean haircut, in a modern tech office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNBPAc_I_wfGJFlJhEG52d728D8GpL_6pZtqi7ppFt5h4BV2u3JMfXjiFs-cQboC8KPlVhbvabmxdmJC7Gdi1y6SFVd_5QOy4LI6WpHjFLSeVZfFd7mHpDlHdlhAzVGX5zZ0ukcLETrgFJPLDikJFiGrJnSDBpUk6DPx9hYa3nMFV8vW_LGK17KcqoFjsaPCQAsR4RJGW0BLQgk_CiXVpK3bChIDrmP2TiG0rzABOZZB5D-Fs9g_kfiT9Ckwl72SD8ybl6fHC-vg"/>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-bold text-on-background">Lê Minh Khoa</span>
+<span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">Chuyên gia ✓</span>
+</div>
+<div class="flex items-center gap-3 text-xs text-on-surface-variant">
+<span>1 tháng 4, 2026</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<span>8 phút đọc</span>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">visibility</span>
+<span>1,234 lượt xem</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">bookmark</span>
+</button>
+<div class="relative group">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">share</span>
+</button>
+</div>
+<button class="flex items-center gap-2 px-5 py-2 border-2 border-primary text-primary rounded-lg font-bold hover:bg-primary/5 transition-all text-sm">
+<span class="material-symbols-outlined scale-75">smart_toy</span>
+                        Tóm tắt AI
+                    </button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<div class="flex flex-col lg:flex-row gap-12">
+<!-- Left Column: Article Body -->
+<article class="lg:w-[65%] w-full">
+<!-- Cover Image -->
+<div class="relative mb-10 overflow-hidden rounded-xl shadow-2xl">
+<img alt="Coding with Claude AI" class="w-full aspect-[16/9] object-cover" data-alt="Cinematic shot of a minimalist workspace with a large monitor displaying complex code structures and Claude AI interface, soft moody studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAn5cHtYd9hmQ_6eDA7GFYQq1PhxZMqxzoewNjLedqFk4Y_eB3hbZi7-4pZBOUWjJKPOS0hDGXAw0u1D084jv-5XZFrap9ZbWbTNUMvkryGQsQB-h-pXQgFQB05gjn5eXQ4cNXzcDYYQShRQpDqpd9MZgT5H7H4VteHfORmlbQmj-6Cm-qwPn8Grq1DFTeFd-KOdDB8KfGok7_rdvfGYrBme7yxPVP7WWpndauzZpUJWPBeB5dkaYZRC-FrlC4pgCImzEgie5gKlA"/>
+<span class="absolute bottom-4 right-4 bg-black/50 text-white text-[10px] px-2 py-1 rounded-md backdrop-blur-sm">Ảnh: Anthropic</span>
+</div>
+<!-- Content Body -->
+<div class="space-y-6 text-on-surface leading-relaxed text-lg font-body">
+<p>Claude Code không chỉ là một chatbot, nó là một trợ lý đắc lực được thiết kế để "sống" ngay bên trong môi trường phát triển của bạn. Đối với lập trình viên Việt Nam, việc tận dụng tối đa công cụ này có thể giúp tăng năng suất lên tới 40%, đặc biệt là trong các tác vụ bảo trì mã nguồn cũ và viết Unit Test.</p>
+<h2 class="text-2xl font-black text-primary mt-12 mb-4 tracking-tight" id="gioi-thieu">1. Khởi tạo môi trường tối ưu</h2>
+<p>Trước khi bắt đầu, hãy đảm bảo bạn đã cấu hình biến môi trường và thiết lập quyền truy cập cho tệp tin cục bộ. Việc này cho phép Claude đọc hiểu toàn bộ cấu trúc dự án của bạn thay vì chỉ từng đoạn code rời rạc.</p>
+<div class="bg-slate-900 text-slate-100 p-6 rounded-lg my-8 font-mono text-sm overflow-x-auto">
+<div class="flex justify-between mb-2 text-slate-400">
+<span>terminal</span>
+<span class="material-symbols-outlined scale-75 cursor-pointer hover:text-white">content_copy</span>
+</div>
+<pre><code>$ npm install -g @anthropic-ai/claude-code
+$ claude login
+$ cd your-awesome-project
+$ claude init</code></pre>
+</div>
+<h2 class="text-2xl font-black text-primary mt-12 mb-4 tracking-tight" id="prompt-strategy">2. Chiến lược Prompt cho Vibecoding</h2>
+<p>Vibecoding - phong cách lập trình tập trung vào ý tưởng và luồng xử lý hơn là cú pháp. Claude Code cực kỳ mạnh mẽ khi bạn giao tiếp với nó bằng các chỉ dẫn mang tính kiến trúc.</p>
+<blockquote class="border-l-4 border-primary bg-primary/5 p-6 rounded-r-xl italic my-8">
+                        "Đừng yêu cầu Claude 'viết hàm này'. Hãy yêu cầu nó 'thiết kế hệ thống lưu trữ cache với Redis có khả năng tự phục hồi'. Sự khác biệt nằm ở tầm nhìn."
+                    </blockquote>
+<ul class="space-y-4 my-8">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-1">check_circle</span>
+<span>Sử dụng tiếng Việt tự nhiên để mô tả nghiệp vụ (domain logic) phức tạp.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-1">check_circle</span>
+<span>Cung cấp ngữ cảnh về framework và thư viện đang sử dụng.</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-1">check_circle</span>
+<span>Yêu cầu Claude kiểm tra các lỗi bảo mật phổ biến như SQL Injection.</span>
+</li>
+</ul>
+<h2 class="text-2xl font-black text-primary mt-12 mb-4 tracking-tight" id="so-sanh-hieu-nang">3. So sánh hiệu năng thực tế</h2>
+<div class="overflow-hidden rounded-xl border border-outline-variant my-8">
+<table class="w-full text-sm text-left">
+<thead class="bg-surface-container-high text-on-surface font-bold">
+<tr>
+<th class="px-6 py-4">Chỉ số</th>
+<th class="px-6 py-4">Code tay</th>
+<th class="px-6 py-4">Với Claude Code</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 font-medium">Viết Unit Test (100 lines)</td>
+<td class="px-6 py-4">45 phút</td>
+<td class="px-6 py-4 text-primary font-bold">12 phút</td>
+</tr>
+<tr class="bg-surface-container-low hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 font-medium">Refactor mã nguồn cũ</td>
+<td class="px-6 py-4">2 giờ</td>
+<td class="px-6 py-4 text-primary font-bold">40 phút</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 font-medium">Debug lỗi logic</td>
+<td class="px-6 py-4">30 phút</td>
+<td class="px-6 py-4 text-primary font-bold">5 phút</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Tags -->
+<div class="flex flex-wrap gap-2 pt-12 pb-8">
+<span class="px-4 py-1.5 bg-surface-container hover:bg-primary/10 rounded-full text-xs font-bold text-on-surface-variant transition-colors cursor-pointer">Claude Code</span>
+<span class="px-4 py-1.5 bg-surface-container hover:bg-primary/10 rounded-full text-xs font-bold text-on-surface-variant transition-colors cursor-pointer">AI</span>
+<span class="px-4 py-1.5 bg-surface-container hover:bg-primary/10 rounded-full text-xs font-bold text-on-surface-variant transition-colors cursor-pointer">Lập trình</span>
+<span class="px-4 py-1.5 bg-surface-container hover:bg-primary/10 rounded-full text-xs font-bold text-on-surface-variant transition-colors cursor-pointer">Vibecoding</span>
+</div>
+<!-- FAQ Section -->
+<section class="bg-surface-container-low p-8 rounded-2xl mt-12 border border-outline-variant/30">
+<h3 class="text-xl font-black mb-6">Câu hỏi thường gặp</h3>
+<div class="space-y-4">
+<details class="group bg-surface-container-lowest p-4 rounded-xl">
+<summary class="flex justify-between items-center cursor-pointer font-bold text-primary list-none">
+                                    Claude Code có hỗ trợ dự án Private không?
+                                    <span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-3 text-sm text-on-surface-variant">Hoàn toàn có. Anthropic cam kết không sử dụng dữ liệu từ Claude Code của các tài khoản trả phí để huấn luyện mô hình cơ sở.</p>
+</details>
+<details class="group bg-surface-container-lowest p-4 rounded-xl">
+<summary class="flex justify-between items-center cursor-pointer font-bold text-primary list-none">
+                                    Chi phí sử dụng là bao nhiêu?
+                                    <span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-3 text-sm text-on-surface-variant">Claude Code tính phí theo Token API thông qua hệ thống Anthropic Console. Bạn chỉ trả tiền cho những gì thực sự sử dụng.</p>
+</details>
+<details class="group bg-surface-container-lowest p-4 rounded-xl">
+<summary class="flex justify-between items-center cursor-pointer font-bold text-primary list-none">
+                                    Làm sao để Claude hiểu tốt tiếng Việt?
+                                    <span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<p class="mt-3 text-sm text-on-surface-variant">Bạn nên sử dụng Claude 3.5 Sonnet hoặc các phiên bản mới nhất, vốn đã được tối ưu hóa cực tốt cho các ngôn ngữ giàu ngữ cảnh như tiếng Việt.</p>
+</details>
+</div>
+</section>
+</div>
+<!-- Author Box -->
+<div class="mt-16 bg-surface-container-high rounded-2xl p-8 flex flex-col md:flex-row gap-8 items-start">
+<img alt="Author Avatar" class="w-24 h-24 rounded-2xl object-cover shadow-lg" data-alt="Close up portrait of a young professional male developer with friendly expression, clean haircut, in a modern tech office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBX-wC54lRnSHqDl6lavdoyehQPGaRYGg5y4KL_bRA8yi9ZTJpfS28za09dDwoj_5FvXITUKfi2MtvxDhpnXcup82Mi8mdmbSPXxTsmMfK0ZJFAAfXDxFhbUw6i5lt6AmoRltEu2xaKnbegu3OJA-uR6wTf3g6SH2ThumCgXqdrTTZwmj0Ch2865-i6NjMCjcMLtu_if0iZjyc3jazuW3HLnHRUZkt7axFbPA2rBwaUfFXGRnVQwRLQzCN1RcJN8VQdm7MFTLYzWw"/>
+<div class="flex-1">
+<div class="flex flex-wrap items-center justify-between gap-4 mb-3">
+<div>
+<h4 class="text-xl font-black">Lê Minh Khoa</h4>
+<p class="text-primary font-bold text-sm">Chuyên gia AI &amp; Công nghệ</p>
+</div>
+<button class="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-all shadow-md">Theo dõi</button>
+</div>
+<p class="text-sm text-on-surface-variant mb-4">Hơn 10 năm kinh nghiệm trong lĩnh vực Software Engineering và hiện đang dẫn dắt các dự án AI Integration tại khu vực Đông Nam Á. Người yêu thích mã nguồn mở và cà phê phin.</p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded font-bold">#Python</span>
+<span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded font-bold">#AI_Safety</span>
+<span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded font-bold">#RAG</span>
+</div>
+<div class="flex gap-4">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">terminal</span></a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">share</span></a>
+</div>
+</div>
+</div>
+<!-- Related Posts -->
+<section class="mt-20">
+<h3 class="text-2xl font-black mb-10 tracking-tight">Bài viết liên quan</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Related 1 -->
+<div class="group cursor-pointer">
+<div class="aspect-[4/3] overflow-hidden rounded-xl mb-4">
+<img alt="Related 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Abstract artistic representation of large language models and neural networks in emerald and dark slate colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBh0hmLmnWRKpgwkMy_gq6OR5JR-HHkK1uDE68SJgX9Eyda6dnO1dDwplOfMjr16ThqIcvUjBo8GnUzf7UKmqBd0XYlfcinrvtiOFdnPCv0VyeOK35N6DTFvXEmjGz5Udd2QTSX9fyxLs1rHNXxka_Epm8sWn7ypSFau2vECtbswuwT8JizcvQ7-nexVXmPG861CNksZyC1mMcda-kuNIhwqy27jqbIStZZVMYD0HLB0bHZFodIrbx_RDo_1NA53uotfnzzqixbRQ"/>
+</div>
+<h4 class="font-bold text-on-background group-hover:text-primary transition-colors leading-snug">So sánh Claude 3.5 Sonnet và GPT-4o trong lập trình</h4>
+</div>
+<!-- Related 2 -->
+<div class="group cursor-pointer">
+<div class="aspect-[4/3] overflow-hidden rounded-xl mb-4">
+<img alt="Related 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Cybersecurity concept with digital lock and glowing green matrix code in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlhCZ7_1om8LXMYwADJL2XhtkTGC3OPNsIHbIrr8OlVUl_Q_eQNLW6yWMDmyLa6eKAePpKcqiVpbF5vOu4V3SruqUEee3DaLVh4qnmOEglJPY0oiAyJWtIOr7IXhVZcP6yNNkhmdXxC67qBqEAzjZku_tyoSFcs5kFXhPou71D83UR6maRnmmstjZ9F0XmgdzFlj2Xx6mgxTfCUIWE0c1cSdsAEArhxUoKfRR0D9UIwP8aV23OyGqfR2SbUemb0ZaCXQ6iEYYDmA"/>
+</div>
+<h4 class="font-bold text-on-background group-hover:text-primary transition-colors leading-snug">Bảo mật dữ liệu khi sử dụng các AI Coding Assistant</h4>
+</div>
+<!-- Related 3 -->
+<div class="group cursor-pointer">
+<div class="aspect-[4/3] overflow-hidden rounded-xl mb-4">
+<img alt="Related 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Group of developers collaborating in a bright modern office with green plants and glass walls" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD__fw1ukPzhWLTt7dYhJLF7PWrYSIsyfv3-NpAkuHeWq3emdt4GuN-gednmh4RLdrgwIrN4JsIovhNvonlyi2b5ujawkjcgGgFv9CA2s94ZkHAwfeSX8thz3VRspNjKlErxDlLGnd0xdqrF1xk97NCIzHimNtPYNBWrGg_arSDT-w71gFrhpjmBwzCKRd_3jpe_GWnKvCHwV7CjjrWQjXtvIXLDctcLchvhho232U-tpaidfBvUFtjMrCW2igEjgJ_fSBGhflqmQ"/>
+</div>
+<h4 class="font-bold text-on-background group-hover:text-primary transition-colors leading-snug">Xây dựng đội ngũ Engineer kỷ nguyên AI: Cần chuẩn bị gì?</h4>
+</div>
+</div>
+</section>
+<!-- Comments Section -->
+<section class="mt-20 pt-12 border-t border-outline-variant/30">
+<div class="flex items-center justify-between mb-10">
+<h3 class="text-2xl font-black tracking-tight">Bình luận (24)</h3>
+<div class="flex items-center gap-2 text-sm font-bold text-primary">
+<span>Sắp xếp: Mới nhất</span>
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Comment Input -->
+<div class="mb-12">
+<textarea class="w-full p-4 rounded-xl bg-surface-container-high border-none focus:ring-2 focus:ring-primary/30 min-h-[120px] transition-all" placeholder="Chia sẻ ý kiến của bạn..."></textarea>
+<div class="flex justify-end mt-4">
+<button class="bg-primary text-white px-8 py-2.5 rounded-lg font-bold hover:opacity-90 shadow-lg">Gửi bình luận</button>
+</div>
+</div>
+<!-- Comment List -->
+<div class="space-y-10">
+<!-- Comment 1 -->
+<div class="flex gap-4">
+<img alt="User" class="w-10 h-10 rounded-full object-cover" data-alt="Avatar of a male user with a casual look" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7jpN41FkPTFyEEUsasRfvdmocBuoIQN7YPbRH856mN3u8wwH_e2zVFH8ZYlAUcYrYGHPHcxGHAz0KFQdtPro0t6LrB5pRM6MAEudgEedTLcam5raioNFMjxR7Rko4fXmLoaRW_O2opHrsSvcANk56A6cfWPzLwIu6KIhBRSYsIGtvKYH3UZo1LZDVcm4XrEQ5cgt6q261ZRKbczrzQRsJ-_qxVlAY_9yQJLu1VFL-lxUUlvLLs2F-rmFNLv9TH7SLn_4JNDyR-w"/>
+<div class="flex-1">
+<div class="flex items-center gap-3 mb-1">
+<span class="font-bold text-sm">Nguyễn Thành Nam</span>
+<span class="text-[10px] text-on-surface-variant">2 giờ trước</span>
+</div>
+<p class="text-sm text-on-surface leading-relaxed mb-3">Bài viết rất chi tiết. Mình đã thử dùng Claude Code và thấy nó handle context của repo cực tốt, vượt xa các extension VS Code thông thường.</p>
+<div class="flex items-center gap-6 text-xs font-bold text-on-surface-variant">
+<button class="flex items-center gap-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-[16px]">thumb_up</span> 12 Thích</button>
+<button class="hover:text-primary transition-colors">Trả lời</button>
+</div>
+<!-- Expert Reply -->
+<div class="mt-6 pl-6 border-l-2 border-primary bg-primary/5 p-4 rounded-r-xl">
+<div class="flex gap-3">
+<img alt="Expert" class="w-8 h-8 rounded-full object-cover" data-alt="Close up portrait of a young professional male developer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCU1VFzJC7LReWwm1IfD_CL6KQa1NbkmdSbveJXaJaayRxPWxH0tQyeodZPEgRe94lVBKsX8-gupCt3i3_RrYS9PyZPduYvHHmolWqxW5j1rNDH_da6leGvOcndgv1nKQDfqi5loVcWBrZgt7RlYimJyjC2YYmeiACVt_52rij2cCf773ZibagI2oMk9IAn_WT5e-0rAoo0zIQqmu5cIVRegoR0WEhTTmW37-tP0XEh4GHL2G9lFk8Wl6wMm-55ug6Tr7AKh6qrTA"/>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-bold text-sm">Lê Minh Khoa</span>
+<span class="bg-primary text-white text-[8px] px-1.5 py-0.5 rounded uppercase font-black">Tác giả</span>
+<span class="text-[10px] text-on-surface-variant">1 giờ trước</span>
+</div>
+<p class="text-sm text-on-surface leading-relaxed">Đúng vậy bạn Nam, khả năng phân tích toàn cục dự án là điểm ăn tiền nhất của nó!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Comment 2 -->
+<div class="flex gap-4">
+<img alt="User" class="w-10 h-10 rounded-full object-cover" data-alt="Avatar of a female user with a professional business look" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxqoJd5UiRiR2Ekv4TvIdfdmGZD1-a60QvJt1nZ9qMzFViMCVlyOVDPd25l6qKAD9fjekMJalPnO5M8de-eAN7wSctInlxndq5STY2ZypLn6j-UJVsEGI1IX-c3e2g0QOAVzvPvRQmKqFt4wMExH1qr2HlPmHtw7oGPimylbE1dhccBuL_z8nG8JJ7tI5c0r6a-R35Kycpk_RL2eKbdDjBERW8NBrIVsFopony4aVVgkCb4p3PdyUj0NVDVIyyfk8-vJgmn8uZgQ"/>
+<div class="flex-1">
+<div class="flex items-center gap-3 mb-1">
+<span class="font-bold text-sm">Trần Thùy Linh</span>
+<span class="text-[10px] text-on-surface-variant">5 giờ trước</span>
+</div>
+<p class="text-sm text-on-surface leading-relaxed mb-3">Cho mình hỏi dùng trên Windows có ổn định không ạ?</p>
+<div class="flex items-center gap-6 text-xs font-bold text-on-surface-variant">
+<button class="flex items-center gap-1 hover:text-primary transition-colors"><span class="material-symbols-outlined text-[16px]">thumb_up</span> 3 Thích</button>
+<button class="hover:text-primary transition-colors">Trả lời</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</article>
+<!-- Right Column: Sidebar -->
+<aside class="lg:w-[35%] w-full">
+<div class="sticky top-24 space-y-8">
+<!-- TOC Sidebar -->
+<div class="bg-surface-container-low rounded-2xl p-6 border border-outline-variant/30">
+<h4 class="text-lg font-black mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">format_list_bulleted</span>
+                            Mục lục
+                        </h4>
+<nav class="space-y-1">
+<a class="toc-link active block px-4 py-3 text-sm font-bold rounded-lg transition-all" href="#gioi-thieu">1. Khởi tạo môi trường tối ưu</a>
+<a class="toc-link block px-4 py-3 text-sm font-bold text-on-surface-variant hover:bg-surface-container transition-all rounded-lg" href="#prompt-strategy">2. Chiến lược Prompt cho Vibecoding</a>
+<a class="toc-link block px-4 py-3 text-sm font-bold text-on-surface-variant hover:bg-surface-container transition-all rounded-lg" href="#so-sanh-hieu-nang">3. So sánh hiệu năng thực tế</a>
+<a class="toc-link block px-4 py-3 text-sm font-bold text-on-surface-variant hover:bg-surface-container transition-all rounded-lg" href="#author-box">4. Về tác giả</a>
+</nav>
+</div>
+<!-- Newsletter Card -->
+<div class="bg-primary rounded-2xl p-8 text-white relative overflow-hidden group">
+<div class="relative z-10">
+<h4 class="text-xl font-black mb-4">Nhận bản tin AI sớm nhất</h4>
+<p class="text-white/80 text-sm mb-6 leading-relaxed">Đừng bỏ lỡ những cập nhật quan trọng nhất về trí tuệ nhân tạo được biên soạn bởi các chuyên gia.</p>
+<div class="space-y-3">
+<input class="w-full bg-white/10 border-white/20 rounded-lg py-3 px-4 text-sm focus:ring-2 focus:ring-white/50 placeholder:text-white/50" placeholder="Email của bạn" type="email"/>
+<button class="w-full bg-white text-primary py-3 rounded-lg font-black hover:bg-white/90 transition-all shadow-xl">Đăng ký ngay</button>
+</div>
+</div>
+<div class="absolute -bottom-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+</div>
+<!-- Trending Widget -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20">
+<h4 class="text-lg font-black mb-6">Xu hướng hôm nay</h4>
+<div class="space-y-6">
+<div class="flex gap-4 items-start group cursor-pointer">
+<span class="text-3xl font-black text-outline-variant group-hover:text-primary transition-colors">01</span>
+<p class="font-bold text-sm leading-snug group-hover:text-primary transition-colors">Sora phát hành bản beta toàn cầu, cạnh tranh gay gắt</p>
+</div>
+<div class="flex gap-4 items-start group cursor-pointer">
+<span class="text-3xl font-black text-outline-variant group-hover:text-primary transition-colors">02</span>
+<p class="font-bold text-sm leading-snug group-hover:text-primary transition-colors">Chính phủ Việt Nam ban hành khung pháp lý mới cho AI</p>
+</div>
+<div class="flex gap-4 items-start group cursor-pointer">
+<span class="text-3xl font-black text-outline-variant group-hover:text-primary transition-colors">03</span>
+<p class="font-bold text-sm leading-snug group-hover:text-primary transition-colors">Apple Intelligence cập nhật hỗ trợ tiếng Việt đầy đủ</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-emerald-50 dark:bg-emerald-950 w-full py-12 flex flex-col md:flex-row justify-between items-center px-12 border-t border-emerald-100/20 dark:border-emerald-900/20 mt-20 tonal-shift-elevation">
+<div class="flex flex-col gap-4 items-center md:items-start mb-8 md:mb-0">
+<span class="text-sm font-bold text-emerald-900 dark:text-emerald-50 tracking-widest uppercase">AI VIETNAM</span>
+<p class="font-inter text-xs uppercase tracking-widest text-emerald-600/60 dark:text-emerald-400/60 text-center md:text-left">
+                © 2024 AI Vietnam. All rights reserved. Precision Editorial Intelligence.
+            </p>
+</div>
+<div class="flex flex-wrap justify-center gap-8 font-inter text-xs uppercase tracking-widest">
+<a class="text-emerald-600/60 dark:text-emerald-400/60 hover:text-emerald-900 dark:hover:text-emerald-50 hover:underline underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">About Us</a>
+<a class="text-emerald-600/60 dark:text-emerald-400/60 hover:text-emerald-900 dark:hover:text-emerald-50 hover:underline underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">Contact</a>
+<a class="text-emerald-600/60 dark:text-emerald-400/60 hover:text-emerald-900 dark:hover:text-emerald-50 hover:underline underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">Ethics Policy</a>
+<a class="text-emerald-600/60 dark:text-emerald-400/60 hover:text-emerald-900 dark:hover:text-emerald-50 hover:underline underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="text-emerald-600/60 dark:text-emerald-400/60 hover:text-emerald-900 dark:hover:text-emerald-50 hover:underline underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">AI Disclosure</a>
+</div>
+</footer>
+<!-- Floating AI Chat Button -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:scale-95 z-[100] group">
+<span class="material-symbols-outlined text-3xl group-hover:hidden">smart_toy</span>
+<span class="hidden group-hover:block font-black text-xs">AI Chat</span>
+</button>
+</body></html>

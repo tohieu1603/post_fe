@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head><base target="_top"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Vietnam - Trí tuệ nhân tạo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed": "#002113",
+              "on-primary": "#ffffff",
+              "tertiary": "#855300",
+              "on-tertiary-container": "#523200",
+              "surface-container": "#e4f1e8",
+              "outline": "#6c7a71",
+              "on-tertiary-fixed-variant": "#653e00",
+              "primary-fixed-dim": "#4edea3",
+              "on-surface": "#131e19",
+              "on-tertiary-fixed": "#2a1700",
+              "on-secondary": "#ffffff",
+              "surface-bright": "#f0fdf4",
+              "inverse-on-surface": "#e7f4eb",
+              "surface": "#f0fdf4",
+              "on-error-container": "#93000a",
+              "inverse-surface": "#27332d",
+              "surface-container-lowest": "#ffffff",
+              "secondary-fixed-dim": "#68dba9",
+              "primary-fixed": "#6ffbbe",
+              "on-error": "#ffffff",
+              "primary-container": "#10b981",
+              "on-secondary-fixed-variant": "#005137",
+              "tertiary-fixed-dim": "#ffb95f",
+              "on-primary-container": "#00422b",
+              "tertiary-fixed": "#ffddb8",
+              "tertiary-container": "#e29100",
+              "secondary": "#006c4a",
+              "on-surface-variant": "#3c4a42",
+              "surface-variant": "#d9e6dd",
+              "on-secondary-container": "#00714e",
+              "on-secondary-fixed": "#002114",
+              "error-container": "#ffdad6",
+              "on-background": "#131e19",
+              "outline-variant": "#bbcabf",
+              "surface-container-highest": "#d9e6dd",
+              "error": "#ba1a1a",
+              "secondary-container": "#82f5c1",
+              "background": "#f0fdf4",
+              "inverse-primary": "#4edea3",
+              "surface-dim": "#d0ddd5",
+              "on-primary-fixed-variant": "#005236",
+              "on-tertiary": "#ffffff",
+              "surface-container-low": "#eaf7ee",
+              "primary": "#006c49",
+              "surface-tint": "#006c49",
+              "surface-container-high": "#deebe3",
+              "secondary-fixed": "#85f8c4"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface overflow-hidden h-screen flex">
+<!-- SideNavBar Component (Shared Anchor) -->
+<aside class="hidden md:flex h-screen w-[280px] border-r border-emerald-100 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950 flex-col p-4 gap-2 h-full font-inter text-sm font-medium">
+<div class="flex items-center gap-3 mb-6 px-2">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div>
+<h1 class="text-lg font-black text-emerald-900 dark:text-emerald-100 leading-none">AI Vietnam</h1>
+<p class="text-xs text-emerald-700/60 font-medium">Trí tuệ nhân tạo</p>
+</div>
+</div>
+<!-- Start New Conversation Button -->
+<button class="flex items-center justify-center gap-2 w-full py-3 bg-primary text-on-primary rounded-lg font-bold shadow-sm hover:opacity-90 transition-all mb-4">
+<span class="material-symbols-outlined">add_comment</span>
+<span>Cuộc trò chuyện mới</span>
+</button>
+<div class="flex-1 overflow-y-auto space-y-6">
+<!-- Today Section -->
+<div class="space-y-1">
+<h3 class="px-2 text-[10px] uppercase tracking-wider font-bold text-emerald-800/50">Hôm nay</h3>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 bg-white dark:bg-emerald-900 text-emerald-700 dark:text-emerald-200 shadow-sm rounded-lg border-l-4 border-primary transition-all duration-200 ease-in-out" href="#">
+<span class="truncate">Hỏi về Claude Code...</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-emerald-800/60 dark:text-emerald-400/60 hover:bg-emerald-100/50 rounded-lg transition-all" href="#">
+<span class="truncate">So sánh GPT-4o...</span>
+</a>
+</div>
+</div>
+<!-- This Week Section -->
+<div class="space-y-1">
+<h3 class="px-2 text-[10px] uppercase tracking-wider font-bold text-emerald-800/50">Tuần này</h3>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 text-emerald-800/60 dark:text-emerald-400/60 hover:bg-emerald-100/50 rounded-lg transition-all" href="#">
+<span class="truncate">Phân tích dữ liệu...</span>
+</a>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="space-y-1 pt-4 border-t border-emerald-100 dark:border-emerald-900">
+<a class="flex items-center gap-3 px-3 py-2 text-emerald-800/60 dark:text-emerald-400/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span>Khám phá AI</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-emerald-800/60 dark:text-emerald-400/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Cài đặt</span>
+</a>
+</nav>
+</div>
+<!-- User Tokens & CTA -->
+<div class="mt-auto space-y-3 pt-4">
+<div class="bg-emerald-100/80 dark:bg-emerald-900/50 p-3 rounded-xl">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-bold text-emerald-900 dark:text-emerald-100">💎 150 tokens còn lại</span>
+<span class="text-[10px] text-emerald-700">80%</span>
+</div>
+<div class="w-full bg-emerald-200 dark:bg-emerald-800 h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[80%]"></div>
+</div>
+</div>
+<button class="w-full py-2 bg-tertiary text-on-tertiary rounded-lg text-xs font-bold hover:opacity-90 transition-all">
+                Nâng cấp Pro
+            </button>
+</div>
+</aside>
+<!-- Main Chat Area -->
+<main class="flex-1 flex flex-col bg-surface-container-lowest relative h-screen">
+<!-- TopBar Header -->
+<header class="h-16 flex items-center justify-between px-6 border-b border-surface-container-high bg-surface-container-lowest/80 backdrop-blur-md sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex flex-col">
+<h2 class="text-base font-bold text-on-surface leading-tight">Hỏi về Claude Code</h2>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 text-emerald-800">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mr-1 animate-pulse"></span>
+                            Đang đọc: Hướng dẫn Claude Code
+                        </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- Messages Area -->
+<section class="flex-1 overflow-y-auto p-4 md:p-8 space-y-8">
+<!-- AI Message -->
+<div class="flex gap-4 max-w-4xl mx-auto items-start">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div class="flex-1 space-y-3">
+<div class="bg-surface-container-low p-4 rounded-2xl rounded-tl-none border border-surface-container-high text-on-surface leading-relaxed">
+<p class="font-medium text-primary mb-2">Chào bạn! Tôi đã sẵn sàng hỗ trợ bạn về Claude Code.</p>
+<p>Claude Code là một giao diện dòng lệnh (CLI) mới được Anthropic phát triển để giúp lập trình viên tương tác trực tiếp với codebase thông qua mô hình Claude 3.7 Sonnet.</p>
+<ul class="list-disc ml-5 mt-2 space-y-1 text-sm text-on-surface-variant">
+<li>Chỉnh sửa file trực tiếp</li>
+<li>Tự động chạy và sửa lỗi test</li>
+<li>Phân tích cấu trúc project phức tạp</li>
+</ul>
+</div>
+<span class="text-[10px] text-on-surface-variant/50 ml-1">10:42 AM</span>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex gap-4 max-w-4xl mx-auto items-start flex-row-reverse">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center flex-shrink-0 overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Close up portrait of a professional young man in a clean studio setting with soft neutral lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiRXS9xmAk8aY0OwO7f3nL3YVMJ26P0tRLQVYmtkX-GrYZvevk3clQ_N3CklPA1IW-lKt5e2ua1e5mNCQKWBIiEMERWIuRbxW2Aa_91m3KUxd-_qCf66XKP8I4vDSxh6xuZIcZOcg5GTnV1Fjj927ZtATbw2WXCFNWMBIgoC6Z_DTWl1qhZ0bPTitdfknpfNTeBMvveh0EYzzf2RDNEk1rPOGvyNvmHgjBXTgre2iTqaKGXKodZAncftaTw0miooCanYyLf1BfHA"/>
+</div>
+<div class="flex flex-col items-end space-y-3 max-w-[80%]">
+<div class="bg-primary text-on-primary p-4 rounded-2xl rounded-tr-none shadow-sm leading-relaxed">
+                        Làm thế nào để tôi cài đặt nó trên macOS?
+                    </div>
+<span class="text-[10px] text-on-surface-variant/50 mr-1">10:43 AM</span>
+</div>
+</div>
+<!-- AI Message (Typing State) -->
+<div class="flex gap-4 max-w-4xl mx-auto items-start">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-primary-container text-sm" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div class="flex-1">
+<div class="bg-surface-container-low p-4 rounded-2xl rounded-tl-none border border-surface-container-high inline-flex items-center gap-1">
+<span class="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+<span class="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+<span class="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Input Area -->
+<footer class="p-4 md:p-6 bg-surface-container-lowest border-t border-surface-container-low">
+<div class="max-w-4xl mx-auto space-y-4">
+<!-- Prompt Chips -->
+<div class="flex flex-wrap gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant text-xs font-medium text-on-surface-variant hover:bg-emerald-50 hover:border-primary transition-all">
+                        Claude Code là gì?
+                    </button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant text-xs font-medium text-on-surface-variant hover:bg-emerald-50 hover:border-primary transition-all">
+                        So sánh với Cursor
+                    </button>
+<button class="whitespace-nowrap px-4 py-1.5 rounded-full border border-outline-variant text-xs font-medium text-on-surface-variant hover:bg-emerald-50 hover:border-primary transition-all">
+                        Cách cài đặt
+                    </button>
+</div>
+<!-- Input Box -->
+<div class="relative group">
+<textarea class="w-full bg-surface-container-low border-0 rounded-2xl p-4 pr-14 text-sm focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all resize-none placeholder:text-on-surface-variant/40" placeholder="Hỏi bất cứ điều gì..." rows="2"></textarea>
+<button class="absolute right-3 bottom-3 w-10 h-10 bg-primary text-on-primary rounded-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-md">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+<!-- Footer Meta -->
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-4 text-[10px] font-medium text-on-surface-variant/50">
+<span class="flex items-center gap-1"><span class="text-tertiary">💎</span> 1 token/câu hỏi</span>
+<span class="flex items-center gap-1">Free: 3/5 câu hỏi hôm nay</span>
+</div>
+<div class="text-[10px] text-on-surface-variant/30">
+                        AI có thể đưa ra câu trả lời sai. Hãy kiểm tra lại thông tin quan trọng.
+                    </div>
+</div>
+</div>
+</footer>
+<!-- Mobile FAB Suppression Check (Not shown as per intent) -->
+</main>
+<!-- Visual Overlays (Intentional Asymmetry) -->
+<div class="fixed top-20 right-[-100px] w-[300px] h-[300px] bg-primary/5 blur-[120px] rounded-full pointer-events-none"></div>
+<div class="fixed bottom-20 left-[200px] w-[200px] h-[200px] bg-tertiary/5 blur-[100px] rounded-full pointer-events-none"></div>
+</body></html>

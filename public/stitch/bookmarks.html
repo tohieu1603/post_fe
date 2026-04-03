@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head><base target="_top"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bài đã lưu | AI VIETNAM</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f0fdf4",
+              "tertiary-container": "#e29100",
+              "outline-variant": "#bbcabf",
+              "surface-variant": "#d9e6dd",
+              "surface-tint": "#006c49",
+              "on-secondary-fixed-variant": "#005137",
+              "on-primary": "#ffffff",
+              "on-primary-fixed-variant": "#005236",
+              "inverse-on-surface": "#e7f4eb",
+              "secondary-fixed": "#85f8c4",
+              "primary": "#006c49",
+              "on-secondary-fixed": "#002114",
+              "on-surface-variant": "#3c4a42",
+              "primary-fixed-dim": "#4edea3",
+              "on-tertiary-container": "#523200",
+              "background": "#f0fdf4",
+              "on-surface": "#131e19",
+              "primary-container": "#10b981",
+              "surface-container-low": "#eaf7ee",
+              "primary-fixed": "#6ffbbe",
+              "tertiary-fixed-dim": "#ffb95f",
+              "inverse-primary": "#4edea3",
+              "surface-bright": "#f0fdf4",
+              "on-primary-fixed": "#002113",
+              "tertiary-fixed": "#ffddb8",
+              "secondary": "#006c4a",
+              "on-tertiary-fixed": "#2a1700",
+              "on-secondary-container": "#00714e",
+              "secondary-fixed-dim": "#68dba9",
+              "on-secondary": "#ffffff",
+              "surface-dim": "#d0ddd5",
+              "on-error": "#ffffff",
+              "on-background": "#131e19",
+              "surface-container-high": "#deebe3",
+              "surface-container": "#e4f1e8",
+              "error": "#ba1a1a",
+              "outline": "#6c7a71",
+              "on-primary-container": "#00422b",
+              "inverse-surface": "#27332d",
+              "error-container": "#ffdad6",
+              "surface-container-lowest": "#ffffff",
+              "tertiary": "#855300",
+              "on-error-container": "#93000a",
+              "secondary-container": "#82f5c1",
+              "on-tertiary-fixed-variant": "#653e00",
+              "surface-container-highest": "#d9e6dd",
+              "on-tertiary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0fdf4; color: #131e19; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .custom-glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .ambient-lift:hover { box-shadow: 0 16px 32px -8px rgba(0, 108, 73, 0.08); transform: translateY(-4px); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-emerald-50/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 shadow-sm w-full top-0">
+<div class="flex justify-between items-center px-6 py-3 max-w-7xl mx-auto w-full">
+<div class="flex items-center gap-8">
+<a class="text-xl font-black text-emerald-800 dark:text-emerald-100 tracking-tighter" href="#">AI VIETNAM</a>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors" href="#">Latest</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors" href="#">Insights</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-emerald-600 dark:hover:text-emerald-300 transition-colors" href="#">Tutorials</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-high border-none rounded-full text-sm focus:ring-2 focus:ring-primary/20 w-64 transition-all" placeholder="Tìm kiếm bài viết..." type="text"/>
+</div>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<div class="flex items-center gap-2 pl-2 border-l border-outline-variant/30">
+<img alt="User profile avatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-primary/10" data-alt="Close-up portrait of a professional man with a friendly expression against a clean soft-lit background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArp8tFGcfkP875RVMpGNVQOODrUHA-FAi9y83zf-x5tWxvNkJZtj-XK9p3GncmNmuKgHXUP1AJy_Cf8m6NQ-V3FJZSnw_UCjVsKcY-0esMMwyzj3Fb_9KvTvbUZYNVfWJJxbCmjseEHWne54s_-e551V639e9KNeT8m--vD3eHVW5GAt88RlbIGf4-MVGASoThG9dq8wxtHjaqeaKW_FkKoj_7-HVb_XRXZBu6D457hm11jPlmojPRGt7QxqKyqzhe0eOHIxquMA"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 py-12 min-h-screen">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+<div>
+<h1 class="text-4xl font-black tracking-tight text-on-surface leading-tight">Bài đã lưu</h1>
+<p class="text-on-surface-variant font-medium mt-1">12 bài viết trong thư viện của bạn</p>
+</div>
+<div class="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 md:pb-0">
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full bg-primary text-on-primary font-bold shadow-sm transition-all active:scale-95">
+                    Tất cả
+                </button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full border-2 border-outline-variant text-on-surface-variant font-semibold hover:border-primary hover:text-primary transition-all active:scale-95">
+                    AI Tools
+                </button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full border-2 border-outline-variant text-on-surface-variant font-semibold hover:border-primary hover:text-primary transition-all active:scale-95">
+                    Hướng dẫn
+                </button>
+<button class="whitespace-nowrap px-6 py-2.5 rounded-full border-2 border-dashed border-outline-variant text-on-surface-variant font-semibold flex items-center gap-2 hover:bg-surface-container transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg">add</span>
+                    Tạo thư mục
+                </button>
+</div>
+</div>
+<!-- Content Grid (Bento style / Asymmetric intent) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Article Card 1 -->
+<article class="group relative bg-surface-container-lowest rounded-xl overflow-hidden ambient-lift transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Futuristic glowing artificial intelligence neural network representation in a dark digital space with emerald light traces" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5Tsxu6wJSyQxDoXAM8xubDtdHMS1yFkuwlyCW6CYSnu0Kbvm5GvBHWSgtfyxNOm5Rhl2y30QqKNA-ypLvW4hZYLdelqD0J5msOemqO210Cp93tZPbCfQmAFemprDbMKrfcCMePgUGL8QyDCBXbcomg39MxX7NKuuFRe_ankl5dS3KKd1D-cQd8xUNdxU1uVunGREPY9xytPNZArHZ-Fah6f3COyjPCuDJDeFWKRnOOB6Br6H14Jz8Hwl4FJnEuKhttveb1Yrhnw"/>
+<div class="absolute top-4 right-4 z-10">
+<div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-on-primary shadow-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+</div>
+<!-- Hover Overlay -->
+<div class="absolute inset-0 bg-on-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
+<button class="bg-error text-on-error px-6 py-2.5 rounded-full font-bold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+<span class="material-symbols-outlined text-lg">delete</span>
+                            Xoá khỏi danh sách
+                        </button>
+</div>
+</div>
+<div class="p-6">
+<span class="inline-block px-3 py-1 bg-tertiary-container text-on-tertiary-container text-[10px] font-bold uppercase tracking-widest rounded-full mb-4">AI Research</span>
+<h3 class="text-xl font-bold leading-snug text-on-surface mb-3 group-hover:text-primary transition-colors">Mô hình ngôn ngữ lớn: Tương lai của giao tiếp người-máy</h3>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">Khám phá cách các mô hình LLM đang thay đổi cách chúng ta tương tác với công nghệ hàng ngày...</p>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-outline-variant/10">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="Portrait of a creative professional researcher in a modern studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP_AuTS38vs-TkSaMeypF_QIwHhoCmqjD2_1BGcC-zx5zvACUpi5bzVRtvTQ7ZXfEQsSVGXgc2nR4v3Evnvm4MEuSzCSpkb9fB6mtSnzG_0ClQw2PRH6-_dFTROqqyf5dI1LXkyr29X1wa00dsvLnGffr60UEGekSddOc41BA-m8zOwX-xFtWuK7Hbd8LM-l9I5JKcyqoCC-K5cKfK-pq7H_mHelnpC3AaxD6wLcL7_omSStryJ4uy8FeyOErGXv-Ui4XN3hxUrw"/>
+<span class="text-xs font-semibold">Minh Phan</span>
+</div>
+<span class="text-[10px] font-medium text-on-surface-variant">15 Th05, 2024</span>
+</div>
+</div>
+</article>
+<!-- Article Card 2 -->
+<article class="group relative bg-surface-container-lowest rounded-xl overflow-hidden ambient-lift transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Digital art representing machine learning with complex abstract geometric shapes and deep emerald gradients" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0xqFyaYeDv7xoMSW1YeBU3qhUw9ZLiC07R9VLhK-yKwd-7JzwQwP197zovw0Z2TYbczHMFvtcTQRFAUFB-VPycs9Z9bz2lUH01irsN-FQMkjFXsavk9FP-1Vr1qTFTQ9ZijzwoOaK466sHmtrVLOEXnz1Ea5HYO_UIZNvqMj9WZYZzUAxCRcpJpv_qDF1iDvAKrg9f6QcwDBIJR8bZSWPLnvi75FqVON8014N0urBQwzJx2pULVTTlbJeCmblz8_gOCWz70_QNQ"/>
+<div class="absolute top-4 right-4 z-10">
+<div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-on-primary shadow-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+</div>
+<div class="absolute inset-0 bg-on-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
+<button class="bg-error text-on-error px-6 py-2.5 rounded-full font-bold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+<span class="material-symbols-outlined text-lg">delete</span>
+                            Xoá khỏi danh sách
+                        </button>
+</div>
+</div>
+<div class="p-6">
+<span class="inline-block px-3 py-1 bg-tertiary-container text-on-tertiary-container text-[10px] font-bold uppercase tracking-widest rounded-full mb-4">AI Tools</span>
+<h3 class="text-xl font-bold leading-snug text-on-surface mb-3 group-hover:text-primary transition-colors">10 Công cụ AI giúp tăng 200% hiệu suất làm việc</h3>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">Tổng hợp những công cụ AI hàng đầu dành cho designer và developer trong năm 2024...</p>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-outline-variant/10">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="Profile of a young woman with a professional and friendly look" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmBWVlj5tp9opRLWIVkh_fnp4CN7SyFbon_3L15B_xOJTDZeC4nLA4F36ncUAfciipQWA15xk-i6m5zVMCTByfHulzCcBr4k95F7k0g78glqHB3Cp24Kk95WI5yHHMOUCyNsMSolgavuUl4wDO3oxOKx-NJSLxlmRbnpH0381yx3Wca1vinAbcq_TRz8aamUhP5TLUFO4iVh9HYq1p14Ki3SZq-hlXn8nUPp9BQT17scwU6JJmwflXhmO_IEjtMbfnn-zrFNwjRg"/>
+<span class="text-xs font-semibold">Linh Nguyễn</span>
+</div>
+<span class="text-[10px] font-medium text-on-surface-variant">12 Th05, 2024</span>
+</div>
+</div>
+</article>
+<!-- Article Card 3 -->
+<article class="group relative bg-surface-container-lowest rounded-xl overflow-hidden ambient-lift transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Minimalist robotic arm interacting with a holographic interface in a clean high-tech laboratory environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvAzaEJ_pw8yXy_KHOprSOrOBlKNwWKQro6xyfRvbJeeMIK_vr5lsEoYbiCnxI2zVANzSvqRZ7dm_L64ckOIZueNg7ykns-VtbZBPq1LN9pSAXxONqypn-LaGIWiLLP_Cg9IUZqL9qxxRFVNwp8jK4TvSYKEqFigdi2hsTIdickmE4ALf0pQu2rWBg-BghNgW0EypnI_EFen_qmAqgwI-H5CeJ-UI9Ec1wousXhYpZ3SQnvM7XNhyaTVItAzKo9Ttzm7oeVjseCA"/>
+<div class="absolute top-4 right-4 z-10">
+<div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-on-primary shadow-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+</div>
+<div class="absolute inset-0 bg-on-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
+<button class="bg-error text-on-error px-6 py-2.5 rounded-full font-bold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+<span class="material-symbols-outlined text-lg">delete</span>
+                            Xoá khỏi danh sách
+                        </button>
+</div>
+</div>
+<div class="p-6">
+<span class="inline-block px-3 py-1 bg-tertiary-container text-on-tertiary-container text-[10px] font-bold uppercase tracking-widest rounded-full mb-4">Tutorials</span>
+<h3 class="text-xl font-bold leading-snug text-on-surface mb-3 group-hover:text-primary transition-colors">Hướng dẫn xây dựng Chatbot AI với Python và OpenAI</h3>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">Từng bước xây dựng ứng dụng chatbot thông minh tích hợp vào hệ thống doanh nghiệp...</p>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-outline-variant/10">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="Portrait of a senior developer in a casual workspace" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAII_0xUnRo_ZXl9qCc26lceNBZpuwcn0uiRJc24B5ifCTW68yuSPQ8nDW28EtdwIIHZDWgN-budWjWXXpGIer5a1pf-vxg5rDwrjbQEVLIaW4KfLDFPwI80aNwKrn-DfSk6g-8CQDg_XySVG3YwN4bZpU_1GjrWVimgU_odN0IfoAigkFc5dps0D4mfE1c2hzw_MU4D4x52meihSs2d1S9tRiRTi360toJU1TleG4oH2l7PwGzXJ16YkyxS3RAa5tD9qWNOgYX2A"/>
+<span class="text-xs font-semibold">Hoàng Anh</span>
+</div>
+<span class="text-[10px] font-medium text-on-surface-variant">10 Th05, 2024</span>
+</div>
+</div>
+</article>
+<!-- More cards for the 3x3 grid simulation -->
+<!-- Repeating similar structure with different content -->
+<article class="group relative bg-surface-container-lowest rounded-xl overflow-hidden ambient-lift transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Digital concept of cybersecurity with complex circuit board patterns and glowing emerald data streams" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0Wkgd6uGJ2n5ip4GykSS2NoHKLt2QQFQv-B1fxTvzNg7ZWEXd0eLUZj1SDZapVhazImhCrwCF1aXJKdAHgElXjjVXQw3ITuA6T1QdITzMImJr5w5jcvce9XNmhaeoB1peNlEK3qNSU4Pr7Nz4q9BarBbUxeQ3UJWufWodC2tJBsLagmOD8GZ0_AHz2GhvIVQQtXbgJ5tPtLOfav_zUCJYgYjO0m6Z_bC5jmetUi30MLiuoqPZ6cUfMcPmUx2Qj4JyVb5NRi_UJw"/>
+<div class="absolute top-4 right-4 z-10">
+<div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-on-primary shadow-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+</div>
+<div class="absolute inset-0 bg-on-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
+<button class="bg-error text-on-error px-6 py-2.5 rounded-full font-bold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+<span class="material-symbols-outlined text-lg">delete</span>
+                            Xoá khỏi danh sách
+                        </button>
+</div>
+</div>
+<div class="p-6">
+<span class="inline-block px-3 py-1 bg-tertiary-container text-on-tertiary-container text-[10px] font-bold uppercase tracking-widest rounded-full mb-4">Ethics</span>
+<h3 class="text-xl font-bold leading-snug text-on-surface mb-3 group-hover:text-primary transition-colors">Đạo đức AI: Những vấn đề cấp bách cần giải quyết</h3>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">Phân tích về tính minh bạch và trách nhiệm trong kỷ nguyên trí tuệ nhân tạo bùng nổ...</p>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-outline-variant/10">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="Portrait of a young academic woman in a thoughtful pose" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCU9rnCjQp2oPLRtxAqTxTUQ5kaYlLXTdZsf7L8f3fTshOPgMG7CSxdzTyz3p3z6An8vtzLkeb5KPTcloIe1NOCHLxzOXPkWE4XABq1xdb2DhC2uuRyYhimEg1-k3e0RmohkYEcCjSyEjoQsjlKc1g-jDj4GJXAtea2_5psvmT7YlOD2FxB2QUv0RgGyZg_bvsVK8Ys2gapekMBlLn9-3Poa8n_cLP9-nmI6M5zxRKhdJpPH5s-W4YVQnCy_2o4W9E-nRBQJSKvPw"/>
+<span class="text-xs font-semibold">An Trần</span>
+</div>
+<span class="text-[10px] font-medium text-on-surface-variant">08 Th05, 2024</span>
+</div>
+</div>
+</article>
+<!-- Repeat 5 more times for a full grid of 9 -->
+<article class="group relative bg-surface-container-lowest rounded-xl overflow-hidden ambient-lift transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Macro photo of a microprocessor chip with glowing electrical impulses in soft emerald and cyan tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5TjcRHRUub5QuqnYEkLjMmkTWUK_eyt9N1qo1uX_YdrTvJJUStC_DjTA5qRFurZE1Rf9U2rxi4psluq12SC6qEwIylForWKF6P76j68B8DlB7ehzdbzWxVi1foIOG9Zy9TU7oAgmcF_slehNMiUxNmwKlDJ9JF6Uz_kHxRsMTxvRRgljJMLENwOewYeH0gajaU50ooedd7N20ERrtEaVHNdMHwsmcRLbtNNP8fXVZfwvKiYcMTBYGSmC44Y5MriRJ1dGocECbNQ"/>
+<div class="absolute top-4 right-4 z-10">
+<div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-on-primary shadow-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+</div>
+<div class="absolute inset-0 bg-on-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
+<button class="bg-error text-on-error px-6 py-2.5 rounded-full font-bold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+<span class="material-symbols-outlined text-lg">delete</span>
+                            Xoá khỏi danh sách
+                        </button>
+</div>
+</div>
+<div class="p-6">
+<span class="inline-block px-3 py-1 bg-tertiary-container text-on-tertiary-container text-[10px] font-bold uppercase tracking-widest rounded-full mb-4">Hardware</span>
+<h3 class="text-xl font-bold leading-snug text-on-surface mb-3 group-hover:text-primary transition-colors">Cuộc đua Chip AI: NVIDIA và những kẻ thách thức</h3>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">Thị trường phần cứng AI đang nóng lên hơn bao giờ hết với sự tham gia của các ông lớn...</p>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-outline-variant/10">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="Portrait of a technology analyst in a professional office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKduMQNmy5LpsOzbSfzau7IA7WRI8mvvAxpxadMh7R_RwCc0m63Qu1zp8npnvAHSqzYqraIvEA-WWrW3jyHLIk-Kj7r5MyBu_oWwDOEpL07UDvcbrwc_jtqZfP0a1KaNHCKfpbirSYg2HI50j2Wcwni2NHcHSbJHtqly3-GTNOi3Jms8qNA30qR2DOTSNEnWIOzNIOZL9qVj36x7gsHNDfrfqLF_TZKUMVZ987aLOJ3I-ZT0HKnalQdtUrg_QOLP_NX5hghZwOBQ"/>
+<span class="text-xs font-semibold">Dũng Lê</span>
+</div>
+<span class="text-[10px] font-medium text-on-surface-variant">05 Th05, 2024</span>
+</div>
+</div>
+</article>
+<!-- Extra card to complete the visual grid -->
+<article class="group relative bg-surface-container-lowest rounded-xl overflow-hidden ambient-lift transition-all duration-300">
+<div class="aspect-video relative overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Visualization of big data as floating particles in a vast digital ocean with deep green lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdbk6arQo3Plb83Sd4qEYxhd1zTHdIgpAYG80SnT4YTBCgqK67qaBtYcQ9-hD-AlU0m4RF-5cyp8v3F5X-dg2US_1mgHxwWHpMgVk6_fwWZHRieVKetozxnO5UPnTP6QwzsXsqttOh9RXja64L9Jiu7PvLb-rhA894yBaI-rpbH-BrZ9lKkXFFN_KoYR11knwn1ZsZcf6onEzBf0cEJbiKTWyNvk1QhKne_bV_TijhQGPqQiWq5P6spX7vJrUbFZNhjyYtmxpa7g"/>
+<div class="absolute top-4 right-4 z-10">
+<div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-on-primary shadow-lg">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+</div>
+<div class="absolute inset-0 bg-on-background/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
+<button class="bg-error text-on-error px-6 py-2.5 rounded-full font-bold flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+<span class="material-symbols-outlined text-lg">delete</span>
+                            Xoá khỏi danh sách
+                        </button>
+</div>
+</div>
+<div class="p-6">
+<span class="inline-block px-3 py-1 bg-tertiary-container text-on-tertiary-container text-[10px] font-bold uppercase tracking-widest rounded-full mb-4">Big Data</span>
+<h3 class="text-xl font-bold leading-snug text-on-surface mb-3 group-hover:text-primary transition-colors">Tối ưu hóa dữ liệu huấn luyện cho AI</h3>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-6">Cách xử lý và làm sạch dữ liệu lớn để đạt kết quả huấn luyện mô hình tốt nhất...</p>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-outline-variant/10">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full object-cover" data-alt="Portrait of a confident female data scientist in a corporate environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBftmTEwlKbsdVW6nJPsgoEePN0OZkcGbhp1C1S6MzuhMwyG7j26vGe-26_7iX2d5SJQx2v7kiUnehG9eSLGSmYGc4xvbJjyruB25Kh0uLLPNAU7779BKA7Sxxd7L4IDZdGvHnvfXDEBbr4Z7RvPSnELjuBywg6QPefp0kaXuumuYw3lni0TNuXYcjl5UshYhLCxoTSk3dp93uq_pxBu9sJzySpv6GAu82VByA8L3t2ivghbTwdrsVQweK8RSsH5eB_F5yxOvmVHA"/>
+<span class="text-xs font-semibold">Mai Hương</span>
+</div>
+<span class="text-[10px] font-medium text-on-surface-variant">01 Th05, 2024</span>
+</div>
+</div>
+</article>
+</div>
+<!-- Pagination / Load More (Editorial Style) -->
+<div class="mt-16 flex justify-center">
+<button class="group flex items-center gap-4 px-8 py-4 bg-surface-container-high rounded-full font-bold hover:bg-primary hover:text-on-primary transition-all duration-300">
+                Xem thêm bài viết
+                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</main>
+<!-- Empty State (Reference only, hidden) -->
+<div class="hidden flex-col items-center justify-center py-20 text-center">
+<div class="w-64 h-64 bg-surface-container rounded-full flex items-center justify-center mb-8">
+<span class="material-symbols-outlined text-8xl text-outline-variant" style="font-variation-settings: 'wght' 200;">bookmark</span>
+</div>
+<h2 class="text-2xl font-bold mb-2">Chưa có bài viết nào</h2>
+<p class="text-on-surface-variant mb-8 max-w-sm">Hãy lưu những bài viết thú vị để đọc lại sau bất cứ khi nào bạn muốn.</p>
+<button class="bg-primary text-on-primary px-8 py-3 rounded-full font-bold shadow-lg hover:shadow-primary/20 transition-all">
+            Khám phá bài viết
+        </button>
+</div>
+<!-- Footer (Shared Component) -->
+<footer class="bg-emerald-50 dark:bg-slate-950 w-full mt-20 border-t border-emerald-100/20">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 py-12 max-w-7xl mx-auto">
+<div class="mb-8 md:mb-0">
+<span class="font-bold text-emerald-900 dark:text-emerald-100 text-xl">AI VIETNAM</span>
+<p class="text-sm font-normal leading-relaxed text-slate-500 mt-2">© 2024 AI Vietnam. The Digital Curator.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-sm font-normal leading-relaxed text-slate-500 hover:text-emerald-500 transition-colors" href="#">Privacy Policy</a>
+<a class="text-sm font-normal leading-relaxed text-slate-500 hover:text-emerald-500 transition-colors" href="#">Terms of Service</a>
+<a class="text-sm font-normal leading-relaxed text-slate-500 hover:text-emerald-500 transition-colors" href="#">Editorial Guidelines</a>
+<a class="text-sm font-normal leading-relaxed text-slate-500 hover:text-emerald-500 transition-colors" href="#">Contact</a>
+</div>
+<div class="mt-8 md:mt-0 flex gap-4">
+<a class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all" href="#">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+</a>
+<a class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all" href="#">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.84 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path></svg>
+</a>
+</div>
+</div>
+</footer>
+</body></html>
