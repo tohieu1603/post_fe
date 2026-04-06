@@ -93,6 +93,7 @@ function CommentInput({
 }) {
   const [text, setText] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [loginPrompt, setLoginPrompt] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -104,6 +105,13 @@ function CommentInput({
   const handleSubmit = async () => {
     const trimmed = text.trim();
     if (!trimmed || submitting) return;
+
+    // Not logged in → show login prompt
+    if (!currentUser) {
+      setLoginPrompt(true);
+      return;
+    }
+
     setSubmitting(true);
     try {
       await onSubmit(trimmed);
@@ -119,90 +127,105 @@ function CommentInput({
     }
   };
 
-  if (!currentUser) {
-    return (
-      <div
-        style={{
-          padding: '12px 16px',
-          background: '#f9fafb',
-          border: '1px solid #e5e7eb',
-          borderRadius: 8,
-          fontSize: 14,
-          color: '#6b7280',
-        }}
-      >
-        <Link href="/dang-nhap" style={{ color: '#059669', fontWeight: 600 }}>
-          Đăng nhập
-        </Link>{' '}
-        để bình luận
-      </div>
-    );
-  }
-
   return (
-    <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-      <Avatar user={currentUser} size={compact ? 30 : 36} />
-      <div style={{ flex: 1 }}>
-        <textarea
-          ref={textareaRef}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder={placeholder}
-          rows={compact ? 2 : 3}
+    <div>
+      {/* Login prompt banner */}
+      {loginPrompt && !currentUser && (
+        <div
           style={{
-            width: '100%',
-            padding: '8px 12px',
-            border: '1px solid #e5e7eb',
+            padding: '12px 16px',
+            marginBottom: 10,
+            background: '#ecfdf5',
+            border: '1px solid #a7f3d0',
             borderRadius: 8,
             fontSize: 14,
-            lineHeight: 1.5,
-            resize: 'vertical',
-            outline: 'none',
-            fontFamily: 'inherit',
-            background: '#fff',
-            boxSizing: 'border-box',
+            color: '#065f46',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
           }}
-          onFocus={(e) => (e.target.style.borderColor = '#059669')}
-          onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
-        />
-        <div style={{ display: 'flex', gap: 8, marginTop: 6, justifyContent: 'flex-end' }}>
-          {onCancel && (
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 20, color: '#059669' }}>info</span>
+          <span>
+            Vui lòng{' '}
+            <Link href="/dang-nhap" style={{ color: '#059669', fontWeight: 700, textDecoration: 'underline' }}>
+              đăng nhập
+            </Link>{' '}
+            để bình luận. Chuyên gia sẽ phản hồi sớm nhất!
+          </span>
+          <button
+            onClick={() => setLoginPrompt(false)}
+            style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280' }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>close</span>
+          </button>
+        </div>
+      )}
+
+      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+        <Avatar user={currentUser} size={compact ? 30 : 36} />
+        <div style={{ flex: 1 }}>
+          <textarea
+            ref={textareaRef}
+            value={text}
+            onChange={(e) => { setText(e.target.value); setLoginPrompt(false); }}
+            onKeyDown={handleKeyDown}
+            placeholder={currentUser ? placeholder : 'Viết bình luận để chuyên gia hỗ trợ bạn...'}
+            rows={compact ? 2 : 3}
+            style={{
+              width: '100%',
+              padding: '8px 12px',
+              border: '1px solid #e5e7eb',
+              borderRadius: 8,
+              fontSize: 14,
+              lineHeight: 1.5,
+              resize: 'vertical',
+              outline: 'none',
+              fontFamily: 'inherit',
+              background: '#fff',
+              boxSizing: 'border-box',
+            }}
+            onFocus={(e) => (e.target.style.borderColor = '#059669')}
+            onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
+          />
+          <div style={{ display: 'flex', gap: 8, marginTop: 6, justifyContent: 'flex-end' }}>
+            {onCancel && (
+              <button
+                onClick={onCancel}
+                style={{
+                  padding: '5px 14px',
+                  borderRadius: 6,
+                  border: '1px solid #e5e7eb',
+                  background: '#fff',
+                  fontSize: 13,
+                  cursor: 'pointer',
+                  color: '#6b7280',
+                }}
+              >
+                Hủy
+              </button>
+            )}
             <button
-              onClick={onCancel}
+              onClick={handleSubmit}
+              disabled={!text.trim() || submitting}
               style={{
-                padding: '5px 14px',
+                padding: '5px 16px',
                 borderRadius: 6,
-                border: '1px solid #e5e7eb',
-                background: '#fff',
+                border: 'none',
+                background: text.trim() && !submitting ? '#059669' : '#d1d5db',
+                color: '#fff',
                 fontSize: 13,
-                cursor: 'pointer',
-                color: '#6b7280',
+                fontWeight: 600,
+                cursor: text.trim() && !submitting ? 'pointer' : 'default',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 4,
               }}
             >
-              Hủy
+              <span className="material-symbols-outlined" style={{ fontSize: 16 }}>send</span>
+              Bình luận
             </button>
-          )}
-          <button
-            onClick={handleSubmit}
-            disabled={!text.trim() || submitting}
-            style={{
-              padding: '5px 16px',
-              borderRadius: 6,
-              border: 'none',
-              background: text.trim() && !submitting ? '#059669' : '#d1d5db',
-              color: '#fff',
-              fontSize: 13,
-              fontWeight: 600,
-              cursor: text.trim() && !submitting ? 'pointer' : 'default',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 4,
-            }}
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: 16 }}>send</span>
-            Bình luận
-          </button>
+          </div>
         </div>
       </div>
     </div>

@@ -244,7 +244,7 @@ export function Header() {
       {/* ── Row 2: Nav bar ─────────────────────────────────────────── */}
       <div className="hidden lg:block">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <nav className="flex items-center gap-0 h-10 overflow-x-auto scrollbar-none">
+          <nav className="flex items-center justify-center gap-0 h-10 overflow-x-auto scrollbar-none">
             {/* Home icon */}
             <Link
               href="/"
