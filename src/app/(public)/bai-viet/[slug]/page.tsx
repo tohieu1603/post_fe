@@ -9,6 +9,7 @@ import { ViewTracker } from '@/components/view-tracker';
 import { NewsletterForm } from '@/components/newsletter-form';
 import { formatDate, readingTimeText } from '@/lib/utils';
 import type { Post } from '@/lib/types';
+import { CommentSection } from '@/components/comment-section';
 
 // ─── Metadata ────────────────────────────────────────────────────────────────
 
@@ -67,7 +68,7 @@ export default async function ArticleDetailPage({
 
   // Parallel fetch: related posts + most viewed
   const [relatedRes, mostViewedRes] = await Promise.allSettled([
-    getRelatedPosts(slug, 3),
+    getRelatedPosts(slug, 6),
     getMostViewed(5),
   ]);
 
@@ -223,7 +224,7 @@ export default async function ArticleDetailPage({
         <div className="flex flex-col lg:flex-row gap-8 md:gap-12">
 
           {/* Left Column: Article Body */}
-          <article className="lg:w-[65%] w-full">
+          <article className="lg:w-[65%] w-full min-w-0">
 
             {/* Cover Image */}
             {post.coverImage && (
@@ -380,23 +381,31 @@ export default async function ArticleDetailPage({
               </div>
             )}
 
-            {/* Related Posts */}
+            {/* Comments Section */}
+            <section className="mt-12 md:mt-20 pt-8 md:pt-12 border-t border-outline-variant/30">
+              <CommentSection postId={post._id} />
+            </section>
+
+            {/* Related Posts — VnExpress style: image left + title/excerpt right */}
             {relatedPosts.length > 0 && (
-              <section className="mt-12 md:mt-20">
-                <h3 className="text-xl md:text-2xl font-black mb-6 md:mb-10 tracking-tight">Bài viết liên quan</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
+              <section className="mt-10 pt-8 border-t border-outline-variant/30">
+                <h3 className="text-xl font-black mb-6 border-b-2 border-on-surface pb-2 inline-block">
+                  {post.category?.name ?? 'Bài viết liên quan'}
+                </h3>
+                <div className="space-y-0">
                   {relatedPosts.map((related) => (
                     <Link
                       key={related._id}
                       href={`/bai-viet/${related.slug}`}
-                      className="group cursor-pointer"
+                      className="group flex gap-4 py-5 border-b border-outline-variant/20 last:border-0"
                     >
-                      <div className="aspect-[4/3] overflow-hidden rounded-xl mb-4">
+                      {/* Image left */}
+                      <div className="w-[200px] md:w-[260px] h-[130px] md:h-[160px] flex-shrink-0 img-zoom rounded overflow-hidden">
                         {related.coverImage ? (
                           <img
                             src={related.coverImage}
                             alt={related.imageAlt ?? related.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            className="w-full h-full object-cover"
                           />
                         ) : (
                           <div className="w-full h-full bg-surface-container-high flex items-center justify-center">
@@ -404,59 +413,64 @@ export default async function ArticleDetailPage({
                           </div>
                         )}
                       </div>
-                      <h4 className="font-bold text-on-background group-hover:text-primary transition-colors leading-snug">
-                        {related.title}
-                      </h4>
+                      {/* Title + excerpt right */}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-base md:text-lg font-bold text-on-background leading-snug group-hover:text-primary transition-colors mb-2">
+                          {related.title}
+                        </h4>
+                        {related.excerpt && (
+                          <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3 mb-2">
+                            {related.excerpt}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                          {related.category && (
+                            <span className="text-primary font-semibold">{related.category.name}</span>
+                          )}
+                          {related.category && <span>·</span>}
+                          <span>{formatDate(related.publishedAt)}</span>
+                        </div>
+                      </div>
                     </Link>
                   ))}
                 </div>
               </section>
             )}
-
-            {/* Comments Section */}
-            <section className="mt-12 md:mt-20 pt-8 md:pt-12 border-t border-outline-variant/30">
-              <h3 className="text-xl md:text-2xl font-black tracking-tight mb-8">Bình luận</h3>
-              <div className="flex flex-col items-center gap-3 py-10 text-on-surface-variant">
-                <span className="material-symbols-outlined text-4xl text-outline-variant">chat_bubble</span>
-                <p className="text-sm font-medium">Tính năng bình luận sẽ sớm ra mắt</p>
-              </div>
-            </section>
           </article>
 
           {/* Right Column: Sidebar */}
-          <aside className="lg:w-[35%] w-full">
-            <div className="sticky top-24 space-y-8">
+          <aside className="lg:w-[35%] w-full min-w-0">
+            <div className="sticky top-24 space-y-6">
 
               {/* TOC Sidebar (client component) */}
               {toc.length > 0 && <TocSidebar items={toc} />}
 
               {/* Newsletter Card */}
-              <div className="bg-primary rounded-2xl p-5 md:p-8 text-white relative overflow-hidden group">
-                <div className="relative z-10">
-                  <h4 className="text-xl font-black mb-4">Nhận bản tin AI sớm nhất</h4>
-                  <p className="text-white/80 text-sm mb-6 leading-relaxed">
-                    Đừng bỏ lỡ những cập nhật quan trọng nhất về trí tuệ nhân tạo được biên soạn bởi các chuyên gia.
-                  </p>
-                  <NewsletterForm vertical />
-                </div>
-                <div className="absolute -bottom-12 -right-12 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
+              <div className="rounded-lg p-5 text-white" style={{ background: 'linear-gradient(135deg, #065f46, #064e3b)' }}>
+                <h4 className="text-base font-bold mb-1.5">Bản tin AI hàng ngày</h4>
+                <p className="text-xs mb-4 leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                  Tin tức AI quan trọng nhất, gửi thẳng vào hộp thư mỗi sáng.
+                </p>
+                <NewsletterForm vertical />
               </div>
 
               {/* Most Viewed Widget */}
               {mostViewed.length > 0 && (
-                <div className="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20">
-                  <h4 className="text-lg font-black mb-6">Xu hướng hôm nay</h4>
-                  <div className="space-y-6">
+                <div>
+                  <h4 className="text-base font-bold text-on-surface mb-3 pb-2 border-b-2 border-emerald-600">
+                    Xem nhiều
+                  </h4>
+                  <div className="space-y-0">
                     {mostViewed.map((item, idx) => (
                       <Link
                         key={item._id}
                         href={`/bai-viet/${item.slug}`}
-                        className="flex gap-4 items-start group cursor-pointer"
+                        className="flex gap-3 items-start py-2.5 border-b border-outline-variant/15 last:border-0 group"
                       >
-                        <span className="text-3xl font-black text-outline-variant group-hover:text-primary transition-colors flex-shrink-0">
-                          {String(idx + 1).padStart(2, '0')}
+                        <span className="text-xl font-black text-emerald-600/30 leading-none flex-shrink-0 w-6 group-hover:text-emerald-600 transition-colors">
+                          {idx + 1}
                         </span>
-                        <p className="font-bold text-sm leading-snug group-hover:text-primary transition-colors">
+                        <p className="text-sm leading-snug text-on-surface group-hover:text-emerald-700 transition-colors">
                           {item.title}
                         </p>
                       </Link>

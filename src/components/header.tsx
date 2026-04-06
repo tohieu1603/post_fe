@@ -10,10 +10,8 @@ interface NavItem {
   slug: string;
 }
 
-// Danh mục từ API (hiển thị dưới /chuyen-muc/)
 const API_CATEGORY_SLUGS = ['model-moi', 'github-hot'];
 
-// Trang tĩnh (không phải danh mục API)
 interface PageLink {
   label: string;
   href: string;
@@ -33,6 +31,15 @@ const FALLBACK_NAV: NavItem[] = [
   { label: 'GitHub Hot', slug: 'github-hot' },
 ];
 
+function formatDate() {
+  const now = new Date();
+  const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+  const d = now.getDate().toString().padStart(2, '0');
+  const m = (now.getMonth() + 1).toString().padStart(2, '0');
+  const y = now.getFullYear();
+  return `${days[now.getDay()]}, ${d}/${m}/${y}`;
+}
+
 export function Header() {
   const router = useRouter();
   const pathname = usePathname();
@@ -43,10 +50,12 @@ export function Header() {
   const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [dateStr, setDateStr] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Fetch nav
+    setDateStr(formatDate());
+
     getNavMenu()
       .then(res => {
         if (res.data?.length) {
@@ -59,29 +68,23 @@ export function Header() {
       })
       .catch(() => {});
 
-    // Check auth state
     try {
       const stored = localStorage.getItem('user');
       const token = localStorage.getItem('accessToken') || localStorage.getItem('token');
-      if (stored && token) {
-        setUser(JSON.parse(stored));
-      }
+      if (stored && token) setUser(JSON.parse(stored));
     } catch {}
 
-    // Restore dark mode from localStorage
     const savedDark = localStorage.getItem('darkMode') === 'true';
     if (savedDark) {
       setDarkMode(true);
       document.documentElement.classList.add('dark');
     }
 
-    // Close search on Esc
     const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') setSearchOpen(false); };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
-  // Click-outside listener for dropdown
   useEffect(() => {
     if (!dropdownOpen) return;
     function handleClickOutside(e: MouseEvent) {
@@ -110,160 +113,221 @@ export function Header() {
     router.push('/');
   };
 
-  // Get initials for avatar
   const initials = user?.name
-    ? user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+    ? user.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()
     : '?';
 
+  const isNavActive = (href: string) => pathname === href;
+  const isCatActive = (slug: string) => pathname === `/chuyen-muc/${slug}`;
+
+  const navLinkClass = (active: boolean) =>
+    active
+      ? 'text-emerald-700 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 pb-[1px] whitespace-nowrap'
+      : 'text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors whitespace-nowrap';
+
   return (
-    <header className="fixed top-0 w-full z-50 glass-header shadow-sm dark:shadow-none">
-      <div className="flex justify-between items-center px-4 md:px-8 h-16 md:h-20 max-w-full mx-auto">
-        {/* Brand Identity */}
-        <Link href="/" className="text-2xl font-bold tracking-tighter text-emerald-900 dark:text-emerald-50 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-3xl">eco</span>
-          AI Vietnam
-        </Link>
+    <header className="fixed top-0 w-full z-50 glass-header border-b border-outline-variant/20">
+      {/* ── Row 1: Top bar ─────────────────────────────────────────── */}
+      <div className="border-b border-outline-variant/20">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 h-10 flex items-center justify-between gap-4">
 
-        {/* Main Links — API categories + static pages */}
-        <nav className="hidden lg:flex items-center gap-6 tracking-tight font-medium">
-          {navItems.map((item) => {
-            const isActive = pathname === `/chuyen-muc/${item.slug}`;
-            return (
-              <Link
-                key={item.slug}
-                href={`/chuyen-muc/${item.slug}`}
-                className={isActive
-                  ? 'text-emerald-700 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 px-1 py-1'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors'
-                }
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-          {STATIC_PAGES.map((page) => {
-            const isActive = pathname === page.href;
-            return (
-              <Link
-                key={page.href}
-                href={page.href}
-                className={isActive
-                  ? 'text-emerald-700 dark:text-emerald-400 font-bold border-b-2 border-emerald-600 dark:border-emerald-400 px-1 py-1'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors'
-                }
-              >
-                {page.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Actions */}
-        <div className="flex items-center gap-2 md:gap-4">
-          <div className="flex items-center gap-1 sm:gap-2 sm:mr-4">
-            <button onClick={() => { setSearchOpen(true); setSearchQuery(''); }} className="p-2 hover:bg-emerald-100/50 rounded-full transition-colors">
-              <span className="material-symbols-outlined text-on-surface-variant">search</span>
-            </button>
-            <button onClick={toggleDarkMode} className="hidden sm:flex p-2 hover:bg-emerald-100/50 rounded-full transition-colors" aria-label="Toggle dark mode">
-              <span className="material-symbols-outlined text-on-surface-variant">{darkMode ? 'dark_mode' : 'light_mode'}</span>
-            </button>
-          </div>
-
-          {/* Auth state: logged in vs guest */}
-          {user ? (
-            <div className="hidden sm:flex items-center gap-3 relative" ref={dropdownRef}>
-              <Link href="/tai-khoan" className="p-2 hover:bg-emerald-100/50 rounded-full transition-colors">
-                <span className="material-symbols-outlined text-on-surface-variant">notifications</span>
-              </Link>
-              <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2 hover:bg-emerald-100/50 rounded-full p-1 pr-3 transition-colors"
-              >
-                <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold">
-                  {initials}
-                </div>
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-200 hidden md:block">{user.name || user.email}</span>
-                <span className="material-symbols-outlined text-slate-400 dark:text-slate-500 text-[18px]">expand_more</span>
-              </button>
-
-              {/* Dropdown */}
-              {dropdownOpen && (
-                <div className="absolute top-full right-0 mt-2 w-56 bg-white dark:bg-[#152019] rounded-xl shadow-xl border border-outline-variant/20 py-2 z-50">
-                  <div className="px-4 py-2 border-b border-outline-variant/20">
-                    <p className="font-bold text-sm text-on-surface">{user.name}</p>
-                    <p className="text-xs text-on-surface-variant">{user.email}</p>
-                  </div>
-                  <Link href="/tai-khoan" className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors text-sm text-on-surface" onClick={() => setDropdownOpen(false)}>
-                    <span className="material-symbols-outlined text-[20px] text-on-surface-variant">person</span>
-                    Tài khoản
-                  </Link>
-                  <Link href="/tai-khoan/da-luu" className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors text-sm text-on-surface" onClick={() => setDropdownOpen(false)}>
-                    <span className="material-symbols-outlined text-[20px] text-on-surface-variant">bookmark</span>
-                    Bài đã lưu
-                  </Link>
-                  <Link href="/ai-chat" className="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors text-sm text-on-surface" onClick={() => setDropdownOpen(false)}>
-                    <span className="material-symbols-outlined text-[20px] text-on-surface-variant">smart_toy</span>
-                    AI Chat
-                  </Link>
-                  <div className="border-t border-outline-variant/20 mt-1 pt-1">
-                    <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 dark:hover:bg-[#2a1010] transition-colors text-sm text-red-600 w-full text-left">
-                      <span className="material-symbols-outlined text-[20px]">logout</span>
-                      Đăng xuất
-                    </button>
-                  </div>
-                </div>
-              )}
+          {/* Left: Logo + brand */}
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <div className="w-7 h-7 bg-emerald-700 text-white text-xs font-black flex items-center justify-center">
+              AI
             </div>
-          ) : (
-            <div className="hidden sm:flex items-center gap-4">
-              <Link href="/dang-nhap" className="text-slate-600 dark:text-slate-300 font-medium hover:text-primary">Đăng nhập</Link>
-              <Link href="/dang-ky" className="editorial-gradient text-white px-6 py-2.5 rounded-lg font-bold tracking-tight">
-                Đăng ký
-              </Link>
+            <div className="flex flex-col leading-none">
+              <span className="font-extrabold text-sm text-emerald-900 dark:text-emerald-100 tracking-tight">AI Vietnam</span>
+              <span className="text-[9px] text-slate-500 dark:text-slate-400 hidden sm:block">Báo AI Việt nhiều người xem nhất</span>
             </div>
+          </Link>
+
+          {/* Center: Date */}
+          {dateStr && (
+            <span className="hidden md:block text-xs text-slate-500 dark:text-slate-400 font-medium absolute left-1/2 -translate-x-1/2">
+              {dateStr}
+            </span>
           )}
 
-          {/* Mobile menu toggle */}
-          <button className="lg:hidden p-2" onClick={() => setMenuOpen(!menuOpen)}>
-            <span className="material-symbols-outlined">{menuOpen ? 'close' : 'menu'}</span>
-          </button>
+          {/* Right: actions */}
+          <div className="flex items-center gap-1 shrink-0">
+            {/* Mới nhất */}
+            <Link
+              href="/chuyen-muc/tin-nhanh"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 px-2 py-1 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+            >
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600" />
+              </span>
+              Mới nhất
+            </Link>
+
+            {/* Search */}
+            <button
+              onClick={() => { setSearchOpen(true); setSearchQuery(''); }}
+              className="p-1.5 text-slate-600 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
+              aria-label="Tìm kiếm"
+            >
+              <span className="material-symbols-outlined text-[20px]">search</span>
+            </button>
+
+            {/* Dark mode */}
+            <button
+              onClick={toggleDarkMode}
+              className="hidden sm:flex p-1.5 text-slate-600 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
+              aria-label="Chế độ tối"
+            >
+              <span className="material-symbols-outlined text-[20px]">{darkMode ? 'dark_mode' : 'light_mode'}</span>
+            </button>
+
+            {/* Auth */}
+            {user ? (
+              <div className="relative hidden sm:flex items-center" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-1.5 px-2 py-1 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                >
+                  <div className="w-6 h-6 rounded-full bg-emerald-700 text-white flex items-center justify-center text-[10px] font-bold">
+                    {initials}
+                  </div>
+                  <span className="text-xs font-medium text-slate-700 dark:text-slate-200 hidden md:block max-w-[100px] truncate">
+                    {user.name || user.email}
+                  </span>
+                  <span className="material-symbols-outlined text-slate-400 text-[14px]">expand_more</span>
+                </button>
+
+                {dropdownOpen && (
+                  <div className="absolute top-full right-0 mt-1 w-52 bg-white dark:bg-[#152019] shadow-xl border border-outline-variant/20 py-1 z-50">
+                    <div className="px-3 py-2 border-b border-outline-variant/20">
+                      <p className="font-bold text-xs text-on-surface truncate">{user.name}</p>
+                      <p className="text-[10px] text-on-surface-variant truncate">{user.email}</p>
+                    </div>
+                    <Link href="/tai-khoan" className="flex items-center gap-2 px-3 py-2 hover:bg-surface-container-low text-xs text-on-surface transition-colors" onClick={() => setDropdownOpen(false)}>
+                      <span className="material-symbols-outlined text-[16px] text-on-surface-variant">person</span>
+                      Tài khoản
+                    </Link>
+                    <Link href="/tai-khoan/da-luu" className="flex items-center gap-2 px-3 py-2 hover:bg-surface-container-low text-xs text-on-surface transition-colors" onClick={() => setDropdownOpen(false)}>
+                      <span className="material-symbols-outlined text-[16px] text-on-surface-variant">bookmark</span>
+                      Bài đã lưu
+                    </Link>
+                    <Link href="/ai-chat" className="flex items-center gap-2 px-3 py-2 hover:bg-surface-container-low text-xs text-on-surface transition-colors" onClick={() => setDropdownOpen(false)}>
+                      <span className="material-symbols-outlined text-[16px] text-on-surface-variant">smart_toy</span>
+                      AI Chat
+                    </Link>
+                    <div className="border-t border-outline-variant/20 mt-1 pt-1">
+                      <button onClick={handleLogout} className="flex items-center gap-2 px-3 py-2 hover:bg-red-50 dark:hover:bg-[#2a1010] text-xs text-red-600 w-full text-left transition-colors">
+                        <span className="material-symbols-outlined text-[16px]">logout</span>
+                        Đăng xuất
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/dang-nhap"
+                className="hidden sm:block text-xs font-semibold text-slate-700 dark:text-slate-200 px-2 py-1 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
+              >
+                Đăng nhập
+              </Link>
+            )}
+
+            {/* Mobile menu toggle */}
+            <button className="lg:hidden p-1.5 text-slate-600 dark:text-slate-400" onClick={() => setMenuOpen(!menuOpen)}>
+              <span className="material-symbols-outlined text-[20px]">{menuOpen ? 'close' : 'menu'}</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* ── Row 2: Nav bar ─────────────────────────────────────────── */}
+      <div className="hidden lg:block">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <nav className="flex items-center gap-0 h-10 overflow-x-auto scrollbar-none">
+            {/* Home icon */}
+            <Link
+              href="/"
+              className={`flex items-center px-3 h-full border-b-2 text-sm transition-colors ${
+                pathname === '/'
+                  ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400 font-bold'
+                  : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-emerald-400'
+              }`}
+              aria-label="Trang chủ"
+            >
+              <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: '"FILL" 1' }}>home</span>
+            </Link>
+
+            {/* API categories */}
+            {navItems.map((item) => (
+              <Link
+                key={item.slug}
+                href={`/chuyen-muc/${item.slug}`}
+                className={`flex items-center px-3 h-full border-b-2 text-sm font-medium transition-colors ${
+                  isCatActive(item.slug)
+                    ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400 font-bold'
+                    : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-emerald-400'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+
+            {/* Static pages */}
+            {STATIC_PAGES.map((page) => (
+              <Link
+                key={page.href}
+                href={page.href}
+                className={`flex items-center px-3 h-full border-b-2 text-sm font-medium transition-colors whitespace-nowrap ${
+                  isNavActive(page.href)
+                    ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400 font-bold'
+                    : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-emerald-400'
+                }`}
+              >
+                {page.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
+
+      {/* ── Mobile menu ──────────────────────────────────────────────── */}
       {menuOpen && (
-        <nav className="lg:hidden px-4 md:px-8 pt-2 pb-6 flex flex-col gap-1 bg-surface border-t border-outline-variant/10">
+        <nav className="lg:hidden border-t border-outline-variant/20 bg-white dark:bg-[#0a1410] px-4 py-2 flex flex-col">
+          <Link href="/" className="py-2 text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+            <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: '"FILL" 1' }}>home</span>
+            Trang chủ
+          </Link>
           {navItems.map(item => (
-            <Link key={item.slug} href={`/chuyen-muc/${item.slug}`} className="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 py-2 font-medium" onClick={() => setMenuOpen(false)}>
+            <Link key={item.slug} href={`/chuyen-muc/${item.slug}`} className="py-2 text-sm font-medium text-slate-700 dark:text-slate-300 border-t border-outline-variant/10" onClick={() => setMenuOpen(false)}>
               {item.label}
             </Link>
           ))}
           {STATIC_PAGES.map(page => (
-            <Link key={page.href} href={page.href} className="text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 py-2 font-medium" onClick={() => setMenuOpen(false)}>
+            <Link key={page.href} href={page.href} className="py-2 text-sm font-medium text-slate-700 dark:text-slate-300 border-t border-outline-variant/10" onClick={() => setMenuOpen(false)}>
               {page.label}
             </Link>
           ))}
-          <div className="flex flex-wrap gap-3 pt-4 border-t border-outline-variant/30">
+          <div className="flex items-center gap-3 pt-3 border-t border-outline-variant/20 mt-1">
+            <button onClick={toggleDarkMode} className="text-sm text-slate-600 dark:text-slate-400 flex items-center gap-1">
+              <span className="material-symbols-outlined text-[18px]">{darkMode ? 'dark_mode' : 'light_mode'}</span>
+              {darkMode ? 'Sáng' : 'Tối'}
+            </button>
             {user ? (
-              <>
-                <Link href="/tai-khoan" className="text-slate-600 font-medium" onClick={() => setMenuOpen(false)}>Tài khoản</Link>
-                <button onClick={handleLogout} className="text-red-600 font-medium">Đăng xuất</button>
-              </>
+              <button onClick={handleLogout} className="text-sm text-red-600 font-medium ml-auto">Đăng xuất</button>
             ) : (
-              <>
-                <Link href="/dang-nhap" className="text-slate-600 dark:text-slate-300 font-medium">Đăng nhập</Link>
-                <Link href="/dang-ky" className="editorial-gradient text-white px-6 py-2 rounded-lg font-bold">Đăng ký</Link>
-              </>
+              <Link href="/dang-nhap" className="text-sm font-semibold text-emerald-700 dark:text-emerald-400 ml-auto" onClick={() => setMenuOpen(false)}>Đăng nhập</Link>
             )}
           </div>
         </nav>
       )}
-      {/* Search Modal */}
+
+      {/* ── Search modal ─────────────────────────────────────────────── */}
       {searchOpen && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-20 px-4" onClick={() => setSearchOpen(false)}>
+        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-16 px-4" onClick={() => setSearchOpen(false)}>
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
           <div
-            className="relative w-full max-w-2xl bg-white dark:bg-[#152019] rounded-2xl shadow-2xl overflow-hidden animate-[fadeUp_0.2s_ease-out]"
+            className="relative w-full max-w-2xl bg-white dark:bg-[#152019] shadow-2xl overflow-hidden animate-[fadeUp_0.2s_ease-out]"
             onClick={(e) => e.stopPropagation()}
           >
             <form
@@ -275,35 +339,36 @@ export function Header() {
                 }
               }}
             >
-              <div className="flex items-center gap-3 px-6 py-4 border-b border-outline-variant/20">
-                <span className="material-symbols-outlined text-emerald-600 text-2xl">search</span>
+              <div className="flex items-center gap-3 px-5 py-3 border-b border-outline-variant/20">
+                <span className="material-symbols-outlined text-emerald-600 text-xl">search</span>
                 <input
                   autoFocus
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Tìm kiếm bài viết, chủ đề..."
-                  className="flex-1 text-lg text-on-surface placeholder:text-on-surface-variant outline-none bg-transparent"
+                  className="flex-1 text-base text-on-surface placeholder:text-on-surface-variant outline-none bg-transparent"
                 />
-                <button
-                  type="button"
-                  onClick={() => setSearchOpen(false)}
-                  className="text-on-surface-variant hover:text-on-surface p-1"
-                >
-                  <span className="material-symbols-outlined">close</span>
+                <button type="button" onClick={() => setSearchOpen(false)} className="text-on-surface-variant hover:text-on-surface">
+                  <span className="material-symbols-outlined text-[20px]">close</span>
                 </button>
               </div>
-              <div className="px-6 py-3 bg-surface-container-low text-xs text-on-surface-variant flex items-center gap-4">
-                <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 bg-surface-container-lowest rounded border border-outline-variant/30 text-[10px] font-mono">Enter</kbd> để tìm</span>
-                <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 bg-surface-container-lowest rounded border border-outline-variant/30 text-[10px] font-mono">Esc</kbd> để đóng</span>
+              <div className="px-5 py-2 bg-surface-container-low text-xs text-on-surface-variant flex items-center gap-4">
+                <span className="flex items-center gap-1">
+                  <kbd className="px-1.5 py-0.5 bg-surface-container-lowest border border-outline-variant/30 text-[10px] font-mono">Enter</kbd> để tìm
+                </span>
+                <span className="flex items-center gap-1">
+                  <kbd className="px-1.5 py-0.5 bg-surface-container-lowest border border-outline-variant/30 text-[10px] font-mono">Esc</kbd> để đóng
+                </span>
               </div>
             </form>
           </div>
         </div>
       )}
+
       <style>{`
         @keyframes fadeUp {
-          from { transform: translateY(-10px); opacity: 0; }
+          from { transform: translateY(-8px); opacity: 0; }
           to { transform: translateY(0); opacity: 1; }
         }
       `}</style>

@@ -153,6 +153,50 @@ export async function checkBookmark(postId: string) {
   );
 }
 
+// --- Comments API ---
+
+export async function getComments(postId: string, page = 1) {
+  return fetcher<{ success: boolean; data: any[]; pagination: any }>(
+    `/api/comments/${postId}?page=${page}&limit=20`
+  );
+}
+
+export async function getCommentCount(postId: string) {
+  return fetcher<{ success: boolean; count: number }>(
+    `/api/comments/${postId}/count`
+  );
+}
+
+export async function postComment(postId: string, content: string, parentId?: string) {
+  return fetcher<{ success: boolean; data: any }>('/api/comments', {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ postId, content, ...(parentId ? { parentId } : {}) }),
+  });
+}
+
+export async function editComment(commentId: string, content: string) {
+  return fetcher<{ success: boolean; data: any }>(`/api/comments/${commentId}`, {
+    method: 'PUT',
+    headers: authHeaders(),
+    body: JSON.stringify({ content }),
+  });
+}
+
+export async function deleteComment(commentId: string) {
+  return fetcher<{ success: boolean }>(`/api/comments/${commentId}`, {
+    method: 'DELETE',
+    headers: authHeaders(),
+  });
+}
+
+export async function toggleCommentLike(commentId: string) {
+  return fetcher<{ success: boolean; liked: boolean; likesCount: number }>(`/api/comments/${commentId}/like`, {
+    method: 'POST',
+    headers: authHeaders(),
+  });
+}
+
 // --- Chat API (streaming) ---
 
 export async function* streamChat(
