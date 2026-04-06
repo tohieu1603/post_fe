@@ -2,10 +2,27 @@ import type { Post, Category, Tag, Pagination, SeoMeta, Author } from './types';
 
 export const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5445';
 
-async function fetcher<T>(path: string, options?: RequestInit): Promise<T> {
+// revalidate: seconds to cache in Next.js App Router server components.
+// Mutating requests (POST/PUT/DELETE) and client-side fetches ignore this
+// because fetch() on the client doesn't use the Next.js cache layer.
+const DEFAULT_REVALIDATE = 60; // 1 minute for public listing data
+
+async function fetcher<T>(path: string, options?: RequestInit & { next?: NextFetchRequestConfig }): Promise<T> {
+  const { next, ...restOptions } = options ?? {};
+
+  // Only apply next cache config for GET requests (safe/idempotent).
+  // POST/PUT/DELETE should never be cached.
+  const method = (restOptions.method ?? 'GET').toUpperCase();
+  const nextConfig = method === 'GET' && next === undefined
+    ? { revalidate: DEFAULT_REVALIDATE }
+    : next;
+
   const res = await fetch(`${API}${path}`, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    ...restOptions,
+    headers: { 'Content-Type': 'application/json', ...restOptions.headers },
+    // next is a Next.js-specific fetch extension for server-side caching;
+    // it is a no-op in browser environments so it's safe to always pass.
+    ...(nextConfig !== undefined ? { next: nextConfig } : {}),
   });
   if (!res.ok) throw new Error(`API ${res.status}: ${path}`);
   return res.json();
@@ -37,7 +54,10 @@ export async function getCategoryPage(slug: string, limit = 10, page = 1) {
 }
 
 export async function getPost(slug: string) {
-  return fetcher<{ success: boolean; data: Post; seo: SeoMeta }>(`/api/public/post/${slug}`);
+  // Article content changes less frequently than listings; cache for 5 minutes
+  return fetcher<{ success: boolean; data: Post; seo: SeoMeta }>(`/api/public/post/${slug}`, {
+    next: { revalidate: 300 },
+  });
 }
 
 export async function getRelatedPosts(slug: string, limit = 5) {
@@ -69,7 +89,10 @@ export async function getCategories() {
 }
 
 export async function getNavMenu() {
-  return fetcher<{ success: boolean; data: Category[] }>('/api/public/navigation/menu');
+  // Nav menu changes very rarely; cache for 10 minutes server-side
+  return fetcher<{ success: boolean; data: Category[] }>('/api/public/navigation/menu', {
+    next: { revalidate: 600 },
+  });
 }
 
 export async function trackEvent(body: { eventType: string; entityType: string; entitySlug?: string }) {

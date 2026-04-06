@@ -115,19 +115,6 @@ export default async function ArticleDetailPage({
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-          }
-          .toc-link.active {
-            background-color: #eaf7ee;
-            border-left: 4px solid #006c49;
-            color: #006c49;
-          }
-        `
-      }} />
-
       {/* Track view */}
       <ViewTracker slug={slug} />
 
@@ -392,34 +379,35 @@ export default async function ArticleDetailPage({
                 <h3 className="text-xl font-black mb-6 border-b-2 border-on-surface pb-2 inline-block">
                   {post.category?.name ?? 'Bài viết liên quan'}
                 </h3>
-                <div className="space-y-0">
+                <div className="divide-y divide-outline-variant/20">
                   {relatedPosts.map((related) => (
                     <Link
                       key={related._id}
                       href={`/bai-viet/${related.slug}`}
-                      className="group flex gap-4 py-5 border-b border-outline-variant/20 last:border-0"
+                      className="group flex gap-5 py-5 first:pt-0"
                     >
-                      {/* Image left */}
-                      <div className="w-[200px] md:w-[260px] h-[130px] md:h-[160px] flex-shrink-0 img-zoom rounded overflow-hidden">
+                      {/* Image left — fixed size for consistency */}
+                      <div className="w-[180px] h-[110px] flex-shrink-0 rounded overflow-hidden img-zoom">
                         {related.coverImage ? (
                           <img
                             src={related.coverImage}
                             alt={related.imageAlt ?? related.title}
                             className="w-full h-full object-cover"
+                            loading="lazy"
                           />
                         ) : (
                           <div className="w-full h-full bg-surface-container-high flex items-center justify-center">
-                            <span className="material-symbols-outlined text-outline-variant text-4xl">article</span>
+                            <span className="material-symbols-outlined text-outline-variant text-3xl">article</span>
                           </div>
                         )}
                       </div>
                       {/* Title + excerpt right */}
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-base md:text-lg font-bold text-on-background leading-snug group-hover:text-primary transition-colors mb-2">
+                      <div className="flex-1 min-w-0 flex flex-col justify-center">
+                        <h4 className="text-[15px] font-bold text-on-background leading-snug group-hover:text-primary transition-colors mb-1.5 line-clamp-2">
                           {related.title}
                         </h4>
                         {related.excerpt && (
-                          <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3 mb-2">
+                          <p className="text-[13px] text-on-surface-variant leading-relaxed line-clamp-2 mb-1.5">
                             {related.excerpt}
                           </p>
                         )}

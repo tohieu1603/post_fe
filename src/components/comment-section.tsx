@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { API } from '@/lib/api';
 import {
   getComments,
-  getCommentCount,
   postComment,
   editComment,
   deleteComment,
   toggleCommentLike,
 } from '@/lib/api';
+// getCommentCount removed: count is already in pagination.total from getComments response
 import { timeAgo } from '@/lib/utils';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -189,7 +189,17 @@ function CommentInput({
             onFocus={(e) => (e.target.style.borderColor = '#059669')}
             onBlur={(e) => (e.target.style.borderColor = '#e5e7eb')}
           />
-          <div style={{ display: 'flex', gap: 8, marginTop: 6, justifyContent: 'flex-end' }}>
+          <div style={{ display: 'flex', gap: 8, marginTop: 6, justifyContent: 'flex-end', alignItems: 'center' }}>
+            {/* Character count: show remaining chars to prevent over-limit submissions */}
+            <span
+              style={{
+                fontSize: 11,
+                color: text.length > 1900 ? (text.length > 2000 ? '#ef4444' : '#f59e0b') : '#9ca3af',
+                marginRight: 'auto',
+              }}
+            >
+              {text.length}/2000
+            </span>
             {onCancel && (
               <button
                 onClick={onCancel}
@@ -206,25 +216,26 @@ function CommentInput({
                 Hủy
               </button>
             )}
+            {/* Disabled while submitting to prevent double-submit */}
             <button
               onClick={handleSubmit}
-              disabled={!text.trim() || submitting}
+              disabled={!text.trim() || submitting || text.length > 2000}
               style={{
                 padding: '5px 16px',
                 borderRadius: 6,
                 border: 'none',
-                background: text.trim() && !submitting ? '#059669' : '#d1d5db',
+                background: text.trim() && !submitting && text.length <= 2000 ? '#059669' : '#d1d5db',
                 color: '#fff',
                 fontSize: 13,
                 fontWeight: 600,
-                cursor: text.trim() && !submitting ? 'pointer' : 'default',
+                cursor: text.trim() && !submitting && text.length <= 2000 ? 'pointer' : 'default',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 4,
               }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: 16 }}>send</span>
-              Bình luận
+              {submitting ? 'Đang gửi...' : 'Bình luận'}
             </button>
           </div>
         </div>
@@ -581,12 +592,21 @@ export function CommentSection({ postId }: { postId: string }) {
       .finally(() => setUserChecked(true));
   }, []);
 
-  // Load initial comments
+  // Use a ref for currentUser so loadComments doesn't need it in deps.
+  // Without this, adding currentUser to deps causes a double-fetch:
+  // once on mount (currentUser=null) and again after auth check resolves.
+  const currentUserRef = useRef<CurrentUser | null>(null);
+  useEffect(() => {
+    currentUserRef.current = currentUser;
+  }, [currentUser]);
+
+  // loadComments only depends on postId — stable across renders.
+  // currentUser is read via ref to avoid stale-closure issues without re-subscribing.
   const loadComments = useCallback(
     async (pageNum: number, append = false) => {
       try {
         const res = await getComments(postId, pageNum);
-        const uid = currentUser?._id;
+        const uid = currentUserRef.current?._id;
         const mapUser = (u: any) => u ? { _id: u._id, name: u.name, avatarUrl: u.avatarUrl ?? u.avatar ?? null } : null;
         const mapComment = (c: any): Comment => ({
           _id: c._id,
@@ -607,29 +627,27 @@ export function CommentSection({ postId }: { postId: string }) {
         if (pagination) {
           const totalPages = Math.ceil((pagination.total ?? 0) / (pagination.limit ?? 20));
           setHasMore(pageNum < totalPages);
+          // count comes from pagination.total — no need for a separate getCommentCount call
           if (!append) setCount(pagination.total ?? fetched.length);
         }
       } catch {
         if (!append) setError('Không thể tải bình luận.');
       }
     },
-    [postId, currentUser]
+    [postId] // currentUser intentionally excluded — read via ref to prevent double-fetch
   );
 
-  // Also fetch count separately if pagination doesn't give total
+  // Wait for userChecked so likedByMe is accurate on first load.
+  // Only runs once per postId after auth status is known.
   useEffect(() => {
+    if (!userChecked) return;
     const init = async () => {
       setLoading(true);
       await loadComments(1);
-      try {
-        const countRes = await getCommentCount(postId);
-        const c = countRes.count ?? (countRes as any).data?.count;
-        if (c !== undefined) setCount(c);
-      } catch {}
       setLoading(false);
     };
     init();
-  }, [postId, loadComments]);
+  }, [postId, userChecked, loadComments]);
 
   const handleLoadMore = async () => {
     const nextPage = page + 1;

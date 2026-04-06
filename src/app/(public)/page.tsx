@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 import Link from 'next/link';
 import { NewsletterForm } from '@/components/newsletter-form';
@@ -67,6 +67,7 @@ function FeedArticle({ post }: { post: Post }) {
               src={cover(post)}
               alt={post.imageAlt ?? post.title}
               className="w-full h-full object-cover"
+              loading="lazy"
             />
           </div>
         </div>
@@ -108,6 +109,7 @@ function CategoryBlock({ category, posts }: { category: { name: string; slug: st
             src={cover(main)}
             alt={main.imageAlt ?? main.title}
             className="w-full h-full object-cover"
+            loading="lazy"
           />
         </div>
         <h3 className="text-sm font-bold text-on-surface leading-snug group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors mb-1">

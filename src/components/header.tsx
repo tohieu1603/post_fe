@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { getNavMenu } from '@/lib/api';
@@ -58,17 +59,30 @@ export function Header() {
   useEffect(() => {
     setDateStr(formatDate());
 
-    getNavMenu()
-      .then(res => {
-        if (res.data?.length) {
-          const items = res.data
-            .filter((c: any) => API_CATEGORY_SLUGS.includes(c.slug))
-            .sort((a: any, b: any) => API_CATEGORY_SLUGS.indexOf(a.slug) - API_CATEGORY_SLUGS.indexOf(b.slug))
-            .map((c: any) => ({ label: c.name, slug: c.slug }));
-          if (items.length) setNavItems(items);
-        }
-      })
-      .catch(() => {});
+    // Cache nav menu in sessionStorage so it isn't re-fetched on every client-side navigation.
+    // Nav categories change rarely; a per-session cache is sufficient.
+    const cached = sessionStorage.getItem('navMenu');
+    if (cached) {
+      try {
+        const items: NavItem[] = JSON.parse(cached);
+        if (items.length) { setNavItems(items); }
+      } catch {}
+    } else {
+      getNavMenu()
+        .then(res => {
+          if (res.data?.length) {
+            const items = res.data
+              .filter((c: any) => API_CATEGORY_SLUGS.includes(c.slug))
+              .sort((a: any, b: any) => API_CATEGORY_SLUGS.indexOf(a.slug) - API_CATEGORY_SLUGS.indexOf(b.slug))
+              .map((c: any) => ({ label: c.name, slug: c.slug }));
+            if (items.length) {
+              setNavItems(items);
+              sessionStorage.setItem('navMenu', JSON.stringify(items));
+            }
+          }
+        })
+        .catch(() => {});
+    }
 
     try {
       const stored = localStorage.getItem('user');
@@ -351,48 +365,57 @@ export function Header() {
         </nav>
       )}
 
-      {/* ── Search modal ─────────────────────────────────────────────── */}
-      {searchOpen && (
-        <div className="fixed inset-0 z-[100] flex items-start justify-center pt-16 px-4" onClick={() => setSearchOpen(false)}>
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-          <div
-            className="relative w-full max-w-2xl bg-white dark:bg-[#152019] shadow-2xl overflow-hidden animate-[fadeUp_0.2s_ease-out]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (searchQuery.trim()) {
-                  setSearchOpen(false);
-                  router.push(`/tim-kiem?q=${encodeURIComponent(searchQuery.trim())}`);
-                }
-              }}
+      {/* ── Search modal (portaled to body so it's not clipped by header) */}
+      {searchOpen && createPortal(
+        <div
+          className="fixed inset-0 z-[9999]"
+          style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)' }}
+          onClick={(e) => {
+            if (!(e.target as HTMLElement).closest('[data-search-box]')) setSearchOpen(false);
+          }}
+        >
+          <div className="flex items-start justify-center pt-16 px-4 h-full">
+            <div
+              data-search-box
+              className="w-full max-w-2xl bg-white dark:bg-[#152019] shadow-2xl overflow-hidden"
+              style={{ animation: 'fadeUp 0.2s ease-out' }}
             >
-              <div className="flex items-center gap-3 px-5 py-3 border-b border-outline-variant/20">
-                <span className="material-symbols-outlined text-emerald-600 text-xl">search</span>
-                <input
-                  autoFocus
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Tìm kiếm bài viết, chủ đề..."
-                  className="flex-1 text-base text-on-surface placeholder:text-on-surface-variant outline-none bg-transparent"
-                />
-                <button type="button" onClick={() => setSearchOpen(false)} className="text-on-surface-variant hover:text-on-surface">
-                  <span className="material-symbols-outlined text-[20px]">close</span>
-                </button>
-              </div>
-              <div className="px-5 py-2 bg-surface-container-low text-xs text-on-surface-variant flex items-center gap-4">
-                <span className="flex items-center gap-1">
-                  <kbd className="px-1.5 py-0.5 bg-surface-container-lowest border border-outline-variant/30 text-[10px] font-mono">Enter</kbd> để tìm
-                </span>
-                <span className="flex items-center gap-1">
-                  <kbd className="px-1.5 py-0.5 bg-surface-container-lowest border border-outline-variant/30 text-[10px] font-mono">Esc</kbd> để đóng
-                </span>
-              </div>
-            </form>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (searchQuery.trim()) {
+                    setSearchOpen(false);
+                    router.push(`/tim-kiem?q=${encodeURIComponent(searchQuery.trim())}`);
+                  }
+                }}
+              >
+                <div className="flex items-center gap-3 px-5 py-3 border-b border-outline-variant/20">
+                  <span className="material-symbols-outlined text-emerald-600 text-xl">search</span>
+                  <input
+                    autoFocus
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Tìm kiếm bài viết, chủ đề..."
+                    className="flex-1 text-base text-on-surface placeholder:text-on-surface-variant outline-none bg-transparent"
+                  />
+                  <button type="button" onClick={() => setSearchOpen(false)} className="text-on-surface-variant hover:text-on-surface">
+                    <span className="material-symbols-outlined text-[20px]">close</span>
+                  </button>
+                </div>
+                <div className="px-5 py-2 bg-surface-container-low text-xs text-on-surface-variant flex items-center gap-4">
+                  <span className="flex items-center gap-1">
+                    <kbd className="px-1.5 py-0.5 bg-surface-container-lowest border border-outline-variant/30 text-[10px] font-mono">Enter</kbd> để tìm
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <kbd className="px-1.5 py-0.5 bg-surface-container-lowest border border-outline-variant/30 text-[10px] font-mono">Esc</kbd> để đóng
+                  </span>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <style>{`
