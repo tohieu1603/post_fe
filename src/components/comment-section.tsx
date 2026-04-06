@@ -122,7 +122,8 @@ function CommentInput({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleSubmit();
     }
   };
@@ -622,7 +623,8 @@ export function CommentSection({ postId }: { postId: string }) {
       await loadComments(1);
       try {
         const countRes = await getCommentCount(postId);
-        if (countRes.count !== undefined) setCount(countRes.count);
+        const c = countRes.count ?? (countRes as any).data?.count;
+        if (c !== undefined) setCount(c);
       } catch {}
       setLoading(false);
     };

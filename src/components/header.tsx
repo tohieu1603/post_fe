@@ -49,6 +49,8 @@ export function Header() {
   const [navItems, setNavItems] = useState<NavItem[]>(FALLBACK_NAV);
   const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  // Theme: 'light' | 'dark' | 'auto' (system preference)
+  const [themeMode, setThemeMode] = useState<'light' | 'dark' | 'auto'>('auto');
   const [darkMode, setDarkMode] = useState(false);
   const [dateStr, setDateStr] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -74,15 +76,33 @@ export function Header() {
       if (stored && token) setUser(JSON.parse(stored));
     } catch {}
 
-    const savedDark = localStorage.getItem('darkMode') === 'true';
-    if (savedDark) {
-      setDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
+    // Theme init: check saved preference or default to auto
+    const savedTheme = localStorage.getItem('themeMode') as 'light' | 'dark' | 'auto' | null;
+    const mode = savedTheme || 'auto';
+    setThemeMode(mode);
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = mode === 'dark' || (mode === 'auto' && systemDark);
+    setDarkMode(isDark);
+    document.documentElement.classList.toggle('dark', isDark);
+
+    // Listen for system theme changes when in auto mode
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleSystemChange = (e: MediaQueryListEvent) => {
+      const currentMode = localStorage.getItem('themeMode') || 'auto';
+      if (currentMode === 'auto') {
+        setDarkMode(e.matches);
+        document.documentElement.classList.toggle('dark', e.matches);
+      }
+    };
+    mediaQuery.addEventListener('change', handleSystemChange);
+    // cleanup added below with keydown
 
     const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') setSearchOpen(false); };
     window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+      mediaQuery.removeEventListener('change', handleSystemChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -96,12 +116,21 @@ export function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [dropdownOpen]);
 
-  const toggleDarkMode = () => {
-    const next = !darkMode;
-    setDarkMode(next);
-    document.documentElement.classList.toggle('dark', next);
-    localStorage.setItem('darkMode', String(next));
+  const cycleTheme = () => {
+    // Cycle: auto → dark → light → auto
+    const order: Array<'auto' | 'dark' | 'light'> = ['auto', 'dark', 'light'];
+    const nextIdx = (order.indexOf(themeMode) + 1) % 3;
+    const next = order[nextIdx];
+    setThemeMode(next);
+    localStorage.setItem('themeMode', next);
+
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = next === 'dark' || (next === 'auto' && systemDark);
+    setDarkMode(isDark);
+    document.documentElement.classList.toggle('dark', isDark);
   };
+  const themeIcon = themeMode === 'auto' ? 'brightness_auto' : darkMode ? 'dark_mode' : 'light_mode';
+  const themeLabel = themeMode === 'auto' ? 'Tự động' : darkMode ? 'Tối' : 'Sáng';
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -174,11 +203,11 @@ export function Header() {
 
             {/* Dark mode */}
             <button
-              onClick={toggleDarkMode}
+              onClick={cycleTheme}
               className="hidden sm:flex p-1.5 text-slate-600 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors"
               aria-label="Chế độ tối"
             >
-              <span className="material-symbols-outlined text-[20px]">{darkMode ? 'dark_mode' : 'light_mode'}</span>
+              <span className="material-symbols-outlined text-[20px]">{themeIcon}</span>
             </button>
 
             {/* Auth */}
@@ -309,9 +338,9 @@ export function Header() {
             </Link>
           ))}
           <div className="flex items-center gap-3 pt-3 border-t border-outline-variant/20 mt-1">
-            <button onClick={toggleDarkMode} className="text-sm text-slate-600 dark:text-slate-400 flex items-center gap-1">
-              <span className="material-symbols-outlined text-[18px]">{darkMode ? 'dark_mode' : 'light_mode'}</span>
-              {darkMode ? 'Sáng' : 'Tối'}
+            <button onClick={cycleTheme} className="text-sm text-slate-600 dark:text-slate-400 flex items-center gap-1">
+              <span className="material-symbols-outlined text-[18px]">{themeIcon}</span>
+              {themeLabel}
             </button>
             {user ? (
               <button onClick={handleLogout} className="text-sm text-red-600 font-medium ml-auto">Đăng xuất</button>
