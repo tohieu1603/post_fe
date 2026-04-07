@@ -202,7 +202,196 @@ function BlockItem({ block: rawBlock }: { block: ContentBlock }) {
       );
 
     case 'html':
-      return <div className="my-6" dangerouslySetInnerHTML={{ __html: block.text ?? '' }} />;
+      return <div className="my-6" dangerouslySetInnerHTML={{ __html: block.text ?? block.content ?? '' }} />;
+
+    case 'link': {
+      const lnk = block.link || block;
+      const linkStyle = lnk.style === 'button'
+        ? 'inline-block bg-primary text-on-primary px-6 py-3 rounded-full font-bold hover:opacity-90 transition-opacity my-4'
+        : lnk.style === 'card'
+        ? 'block bg-surface-container-low border border-outline-variant rounded-xl p-4 hover:shadow-md transition-shadow my-4'
+        : 'text-primary underline hover:no-underline';
+      return (
+        <a href={lnk.url} target={lnk.target || '_blank'} rel={lnk.rel || 'noopener noreferrer'} className={linkStyle}>
+          {lnk.text || lnk.url}
+        </a>
+      );
+    }
+
+    case 'embed': {
+      const emb = block.embed || block;
+      if (emb.html) return <div className="my-8" dangerouslySetInnerHTML={{ __html: emb.html }} />;
+      const isYt = emb.url?.includes('youtube') || emb.url?.includes('youtu.be');
+      const ytId = emb.url?.match(/(?:v=|youtu\.be\/)([\w-]+)/)?.[1];
+      if (isYt && ytId) {
+        return (
+          <figure className="my-8">
+            <div className="relative pb-[56.25%] rounded-xl overflow-hidden bg-black">
+              <iframe src={`https://www.youtube.com/embed/${ytId}`} className="absolute inset-0 w-full h-full" allowFullScreen loading="lazy" />
+            </div>
+            {emb.caption && <figcaption className="text-center text-sm text-on-surface-variant mt-2 italic">{emb.caption}</figcaption>}
+          </figure>
+        );
+      }
+      const isTweet = emb.url?.includes('twitter.com') || emb.url?.includes('x.com');
+      if (isTweet) {
+        return (
+          <div className="my-8 flex justify-center">
+            <blockquote className="twitter-tweet"><a href={emb.url}>{emb.url}</a></blockquote>
+          </div>
+        );
+      }
+      return (
+        <figure className="my-8">
+          <div className="relative pb-[56.25%] rounded-xl overflow-hidden">
+            <iframe src={emb.url} className="absolute inset-0 w-full h-full border-0" allowFullScreen loading="lazy" />
+          </div>
+          {emb.caption && <figcaption className="text-center text-sm text-on-surface-variant mt-2 italic">{emb.caption}</figcaption>}
+        </figure>
+      );
+    }
+
+    case 'video': {
+      const vid = block.video || block;
+      return (
+        <figure className="my-8">
+          <video
+            src={vid.url}
+            poster={vid.poster}
+            controls
+            className="w-full rounded-xl"
+            preload="metadata"
+            {...(vid.autoplay ? { autoPlay: true, muted: true } : {})}
+          />
+          {vid.caption && <figcaption className="text-center text-sm text-on-surface-variant mt-2 italic">{vid.caption}</figcaption>}
+        </figure>
+      );
+    }
+
+    case 'audio': {
+      const aud = block.audio || block;
+      return (
+        <figure className="my-6 bg-surface-container-low rounded-xl p-4">
+          {aud.title && <p className="font-bold mb-2">{aud.title}</p>}
+          <audio src={aud.url} controls className="w-full" preload="metadata" />
+          {aud.caption && <p className="text-sm text-on-surface-variant mt-2">{aud.caption}</p>}
+        </figure>
+      );
+    }
+
+    case 'callout': {
+      const co = block.callout || block;
+      const coType = co.type || co.calloutType || 'info';
+      const coStyles: Record<string, string> = {
+        info: 'bg-blue-50 border-blue-400 text-blue-900 dark:bg-blue-950/30 dark:text-blue-200 dark:border-blue-500',
+        warning: 'bg-amber-50 border-amber-400 text-amber-900 dark:bg-amber-950/30 dark:text-amber-200 dark:border-amber-500',
+        error: 'bg-red-50 border-red-400 text-red-900 dark:bg-red-950/30 dark:text-red-200 dark:border-red-500',
+        success: 'bg-emerald-50 border-emerald-400 text-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-200 dark:border-emerald-500',
+        tip: 'bg-purple-50 border-purple-400 text-purple-900 dark:bg-purple-950/30 dark:text-purple-200 dark:border-purple-500',
+        note: 'bg-gray-50 border-gray-400 text-gray-900 dark:bg-gray-800/30 dark:text-gray-200 dark:border-gray-500',
+      };
+      const icons: Record<string, string> = { info: 'info', warning: 'warning', error: 'error', success: 'check_circle', tip: 'lightbulb', note: 'edit_note' };
+      return (
+        <div className={`border-l-4 rounded-r-xl p-5 my-8 ${coStyles[coType] || coStyles.info}`}>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="material-symbols-outlined text-lg">{icons[coType] || 'info'}</span>
+            {co.title && <span className="font-bold">{co.title}</span>}
+          </div>
+          <div dangerouslySetInnerHTML={{ __html: co.content || '' }} />
+        </div>
+      );
+    }
+
+    case 'button': {
+      const btn = block.button || block;
+      const btnStyles: Record<string, string> = {
+        primary: 'bg-primary text-on-primary hover:opacity-90',
+        secondary: 'bg-secondary text-on-secondary hover:opacity-90',
+        outline: 'border-2 border-primary text-primary hover:bg-primary/10',
+        ghost: 'text-primary hover:bg-primary/10',
+      };
+      const btnSizes: Record<string, string> = { sm: 'px-4 py-2 text-sm', md: 'px-6 py-3', lg: 'px-8 py-4 text-lg' };
+      return (
+        <div className="my-6">
+          <a
+            href={btn.url}
+            target={btn.target || '_blank'}
+            rel="noopener noreferrer"
+            className={`inline-flex items-center gap-2 rounded-full font-bold transition-all ${btnStyles[btn.style || 'primary']} ${btnSizes[btn.size || 'md']}`}
+          >
+            {btn.icon && <span className="material-symbols-outlined">{btn.icon}</span>}
+            {btn.text}
+          </a>
+        </div>
+      );
+    }
+
+    case 'accordion': {
+      const acc = block.accordion || block;
+      const items = acc.items || [];
+      return (
+        <div className="my-8 space-y-2">
+          {items.map((item: { title: string; content: string }, i: number) => (
+            <AccordionItem key={i} title={item.title} content={item.content} />
+          ))}
+        </div>
+      );
+    }
+
+    case 'file': {
+      const fl = block.file || block;
+      const sizeStr = fl.size ? (fl.size > 1048576 ? `${(fl.size / 1048576).toFixed(1)} MB` : `${(fl.size / 1024).toFixed(0)} KB`) : '';
+      return (
+        <a href={fl.url} download className="flex items-center gap-3 bg-surface-container-low border border-outline-variant rounded-xl p-4 my-6 hover:shadow-md transition-shadow">
+          <span className="material-symbols-outlined text-2xl text-primary">download</span>
+          <div>
+            <p className="font-bold">{fl.filename}</p>
+            {sizeStr && <p className="text-sm text-on-surface-variant">{sizeStr}</p>}
+          </div>
+        </a>
+      );
+    }
+
+    case 'gallery': {
+      const gal = block.gallery || block;
+      const imgs = gal.images || [];
+      const cols = gal.columns || 3;
+      return (
+        <div className={`grid grid-cols-2 md:grid-cols-${cols} gap-3 my-8`}>
+          {imgs.map((img: { url: string; alt?: string; caption?: string }, i: number) => (
+            <figure key={i} className="rounded-xl overflow-hidden bg-surface-container">
+              <img src={img.url} alt={img.alt || ''} className="w-full h-48 object-cover" loading="lazy" />
+              {img.caption && <figcaption className="text-xs text-center p-2 text-on-surface-variant">{img.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      );
+    }
+
+    case 'map': {
+      const mp = block.map || block;
+      const mapUrl = mp.embedUrl || `https://maps.google.com/maps?q=${mp.lat},${mp.lng}&z=${mp.zoom || 15}&output=embed`;
+      return (
+        <figure className="my-8">
+          <div className="relative pb-[56.25%] rounded-xl overflow-hidden">
+            <iframe src={mapUrl} className="absolute inset-0 w-full h-full border-0" loading="lazy" allowFullScreen />
+          </div>
+          {mp.caption && <figcaption className="text-center text-sm text-on-surface-variant mt-2">{mp.caption}</figcaption>}
+        </figure>
+      );
+    }
+
+    case 'social': {
+      const soc = block.social || block;
+      if (soc.html) return <div className="my-8 flex justify-center" dangerouslySetInnerHTML={{ __html: soc.html }} />;
+      return (
+        <div className="my-8 flex justify-center">
+          <a href={soc.url} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+            View on {soc.platform}
+          </a>
+        </div>
+      );
+    }
 
     case 'media-text':
       return (
@@ -272,6 +461,23 @@ function CodeBlock({ block }: { block: any }) {
       </div>
       <pre><code>{block.code}</code></pre>
     </div>
+  );
+}
+
+function AccordionItem({ title, content }: { title: string; content: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <details
+      className="group bg-surface-container-lowest border border-outline-variant/30 rounded-xl"
+      open={open}
+      onClick={(e) => { e.preventDefault(); setOpen(!open); }}
+    >
+      <summary className="flex justify-between items-center cursor-pointer font-bold p-4 list-none">
+        {title}
+        <span className="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+      </summary>
+      {open && <div className="px-4 pb-4 text-sm text-on-surface-variant" dangerouslySetInnerHTML={{ __html: content }} />}
+    </details>
   );
 }
 
