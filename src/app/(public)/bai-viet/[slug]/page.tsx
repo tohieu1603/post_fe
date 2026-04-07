@@ -118,10 +118,10 @@ export default async function ArticleDetailPage({
       {/* Track view */}
       <ViewTracker slug={slug} />
 
-      <main className="max-w-screen-2xl mx-auto px-4 md:px-8 lg:px-12 py-6 md:py-8 mt-16 md:mt-20">
+      <main className="max-w-screen-2xl mx-auto px-4 md:px-8 lg:px-12 pt-3 pb-6 md:pb-8 mt-16 md:mt-20">
 
         {/* ── Breadcrumb ─────────────────────────────────────────── */}
-        <nav className="flex text-on-surface-variant text-sm mb-8 gap-2 font-medium flex-wrap">
+        <nav className="flex text-on-surface-variant text-sm mb-4 gap-2 font-medium flex-wrap">
           {breadcrumbs.map((crumb, i) => {
             const isLast = i === breadcrumbs.length - 1;
             return (
@@ -139,23 +139,42 @@ export default async function ArticleDetailPage({
           })}
         </nav>
 
+        {/* ── Cover Image (full-width, above title like VnExpress) ── */}
+        {post.coverImage && (
+          <div className="relative mb-5 overflow-hidden">
+            <img
+              src={post.coverImage}
+              alt={post.imageAlt ?? post.title}
+              className="w-full aspect-[21/9] object-cover"
+            />
+            {post.imageAlt && (
+              <span className="absolute bottom-3 right-3 bg-black/50 text-white text-[10px] px-2 py-1 rounded backdrop-blur-sm">
+                {post.imageAlt}
+              </span>
+            )}
+          </div>
+        )}
+
         {/* ── Article Header ─────────────────────────────────────── */}
-        <header className="mb-10">
-          <h1 className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-on-background leading-tight mb-6 md:mb-8 tracking-tighter">
+        <header className="mb-6">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-on-background leading-tight mb-4 tracking-tight">
             {post.title}
           </h1>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-outline-variant/30">
+          {post.excerpt && (
+            <p className="text-base text-on-surface-variant leading-relaxed mb-4">{post.excerpt}</p>
+          )}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-outline-variant/30">
             {/* Author meta */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               {authorAvatar ? (
                 <img
                   src={authorAvatar}
                   alt={authorName}
-                  className="w-10 h-10 rounded-full object-cover"
+                  className="w-9 h-9 rounded-full object-cover"
                 />
               ) : (
-                <span className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center">
-                  <span className="material-symbols-outlined text-on-surface-variant">person</span>
+                <span className="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center">
+                  <span className="material-symbols-outlined text-on-surface-variant text-lg">person</span>
                 </span>
               )}
               <div className="flex flex-col">
@@ -163,12 +182,12 @@ export default async function ArticleDetailPage({
                   {authorSlug ? (
                     <Link
                       href={`/tac-gia/${authorSlug}`}
-                      className="font-bold text-on-background hover:text-primary transition-colors"
+                      className="font-bold text-sm text-on-background hover:text-primary transition-colors"
                     >
                       {authorName}
                     </Link>
                   ) : (
-                    <span className="font-bold text-on-background">{authorName}</span>
+                    <span className="font-bold text-sm text-on-background">{authorName}</span>
                   )}
                   {authorJobTitle && (
                     <span className="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">
@@ -176,26 +195,16 @@ export default async function ArticleDetailPage({
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-3 text-xs text-on-surface-variant flex-wrap">
+                <div className="flex items-center gap-2 text-xs text-on-surface-variant flex-wrap">
                   {publishedDate && <span>{publishedDate}</span>}
-                  {publishedDate && readingTime && (
-                    <span className="w-1 h-1 bg-outline-variant rounded-full" />
-                  )}
+                  {publishedDate && readingTime && <span>·</span>}
                   {readingTime && <span>{readingTimeText(readingTime)}</span>}
-                  {(publishedDate || readingTime) && (
-                    <span className="w-1 h-1 bg-outline-variant rounded-full" />
-                  )}
-                  <div className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[14px]">visibility</span>
-                    <span>{viewCount} lượt xem</span>
-                  </div>
+                  {(publishedDate || readingTime) && <span>·</span>}
+                  <span>{viewCount} lượt xem</span>
                   {updatedDate && (
                     <>
-                      <span className="w-1 h-1 bg-outline-variant rounded-full" />
-                      <div className="flex items-center gap-1">
-                        <span className="material-symbols-outlined text-[14px]">update</span>
-                        <span>Cập nhật {updatedDate}</span>
-                      </div>
+                      <span>·</span>
+                      <span>Cập nhật {updatedDate}</span>
                     </>
                   )}
                 </div>
@@ -212,22 +221,6 @@ export default async function ArticleDetailPage({
 
           {/* Left Column: Article Body */}
           <article className="lg:w-[65%] w-full min-w-0">
-
-            {/* Cover Image */}
-            {post.coverImage && (
-              <div className="relative mb-10 overflow-hidden rounded-xl shadow-2xl">
-                <img
-                  src={post.coverImage}
-                  alt={post.imageAlt ?? post.title}
-                  className="w-full aspect-[16/9] object-cover"
-                />
-                {post.imageAlt && (
-                  <span className="absolute bottom-4 right-4 bg-black/50 text-white text-[10px] px-2 py-1 rounded-md backdrop-blur-sm">
-                    {post.imageAlt}
-                  </span>
-                )}
-              </div>
-            )}
 
             {/* Content Blocks */}
             {blocks.length > 0 ? (

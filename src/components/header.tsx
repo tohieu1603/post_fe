@@ -4,32 +4,27 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { getNavMenu } from '@/lib/api';
+// Nav is static — no API fetch needed
 
-interface NavItem {
-  label: string;
-  slug: string;
-}
 
-const API_CATEGORY_SLUGS = ['model-moi', 'github-hot'];
-
-interface PageLink {
+// All nav items — mix of category pages (/chuyen-muc/slug) and static pages
+interface NavLink {
   label: string;
   href: string;
 }
 
-const STATIC_PAGES: PageLink[] = [
-  { label: 'Startup & Funding', href: '/startup-funding' },
-  { label: 'So Sánh', href: '/so-sanh' },
-  { label: 'Hướng Dẫn', href: '/huong-dan' },
-  { label: 'Phân Tích', href: '/phan-tich' },
-  { label: 'Deep Dive', href: '/deep-dive' },
-  { label: 'Tuần Qua', href: '/tuan-qua' },
-];
-
-const FALLBACK_NAV: NavItem[] = [
-  { label: 'Model Mới', slug: 'model-moi' },
-  { label: 'GitHub Hot', slug: 'github-hot' },
+const NAV_LINKS: NavLink[] = [
+  { label: 'AI Models', href: '/chuyen-muc/ai-models' },
+  { label: 'AI Tools', href: '/chuyen-muc/ai-tools' },
+  { label: 'AI Agents', href: '/chuyen-muc/ai-agents' },
+  { label: 'AI Code', href: '/chuyen-muc/ai-code' },
+  { label: 'AI Creative', href: '/chuyen-muc/ai-creative' },
+  { label: 'AI Business', href: '/chuyen-muc/ai-business' },
+  { label: 'Research', href: '/chuyen-muc/research' },
+  { label: 'Tutorials', href: '/chuyen-muc/tutorials' },
+  { label: 'AI Vietnam', href: '/chuyen-muc/ai-vietnam' },
+  { label: 'Weekly Digest', href: '/tuan-qua' },
+  { label: 'Prompt Lab', href: '/chuyen-muc/prompt-lab' },
 ];
 
 function formatDate() {
@@ -47,7 +42,7 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [navItems, setNavItems] = useState<NavItem[]>(FALLBACK_NAV);
+  // Nav is static — no API fetch needed
   const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   // Theme: 'light' | 'dark' | 'auto' (system preference)
@@ -59,30 +54,7 @@ export function Header() {
   useEffect(() => {
     setDateStr(formatDate());
 
-    // Cache nav menu in sessionStorage so it isn't re-fetched on every client-side navigation.
-    // Nav categories change rarely; a per-session cache is sufficient.
-    const cached = sessionStorage.getItem('navMenu');
-    if (cached) {
-      try {
-        const items: NavItem[] = JSON.parse(cached);
-        if (items.length) { setNavItems(items); }
-      } catch {}
-    } else {
-      getNavMenu()
-        .then(res => {
-          if (res.data?.length) {
-            const items = res.data
-              .filter((c: any) => API_CATEGORY_SLUGS.includes(c.slug))
-              .sort((a: any, b: any) => API_CATEGORY_SLUGS.indexOf(a.slug) - API_CATEGORY_SLUGS.indexOf(b.slug))
-              .map((c: any) => ({ label: c.name, slug: c.slug }));
-            if (items.length) {
-              setNavItems(items);
-              sessionStorage.setItem('navMenu', JSON.stringify(items));
-            }
-          }
-        })
-        .catch(() => {});
-    }
+    // Nav is static — no API fetch needed
 
     try {
       const stored = localStorage.getItem('user');
@@ -160,8 +132,7 @@ export function Header() {
     ? user.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()
     : '?';
 
-  const isNavActive = (href: string) => pathname === href;
-  const isCatActive = (slug: string) => pathname === `/chuyen-muc/${slug}`;
+  const isNavActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
   const navLinkClass = (active: boolean) =>
     active
@@ -301,33 +272,17 @@ export function Header() {
               <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: '"FILL" 1' }}>home</span>
             </Link>
 
-            {/* API categories */}
-            {navItems.map((item) => (
+            {NAV_LINKS.map((link) => (
               <Link
-                key={item.slug}
-                href={`/chuyen-muc/${item.slug}`}
-                className={`flex items-center px-3 h-full border-b-2 text-sm font-medium transition-colors ${
-                  isCatActive(item.slug)
+                key={link.href}
+                href={link.href}
+                className={`flex items-center px-2.5 h-full border-b-2 text-[13px] font-medium transition-colors whitespace-nowrap ${
+                  isNavActive(link.href)
                     ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400 font-bold'
                     : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-emerald-400'
                 }`}
               >
-                {item.label}
-              </Link>
-            ))}
-
-            {/* Static pages */}
-            {STATIC_PAGES.map((page) => (
-              <Link
-                key={page.href}
-                href={page.href}
-                className={`flex items-center px-3 h-full border-b-2 text-sm font-medium transition-colors whitespace-nowrap ${
-                  isNavActive(page.href)
-                    ? 'border-emerald-600 text-emerald-700 dark:text-emerald-400 font-bold'
-                    : 'border-transparent text-slate-600 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-emerald-400'
-                }`}
-              >
-                {page.label}
+                {link.label}
               </Link>
             ))}
           </nav>
@@ -341,14 +296,9 @@ export function Header() {
             <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: '"FILL" 1' }}>home</span>
             Trang chủ
           </Link>
-          {navItems.map(item => (
-            <Link key={item.slug} href={`/chuyen-muc/${item.slug}`} className="py-2 text-sm font-medium text-slate-700 dark:text-slate-300 border-t border-outline-variant/10" onClick={() => setMenuOpen(false)}>
-              {item.label}
-            </Link>
-          ))}
-          {STATIC_PAGES.map(page => (
-            <Link key={page.href} href={page.href} className="py-2 text-sm font-medium text-slate-700 dark:text-slate-300 border-t border-outline-variant/10" onClick={() => setMenuOpen(false)}>
-              {page.label}
+          {NAV_LINKS.map(link => (
+            <Link key={link.href} href={link.href} className="py-2 text-sm font-medium text-slate-700 dark:text-slate-300 border-t border-outline-variant/10" onClick={() => setMenuOpen(false)}>
+              {link.label}
             </Link>
           ))}
           <div className="flex items-center gap-3 pt-3 border-t border-outline-variant/20 mt-1">
