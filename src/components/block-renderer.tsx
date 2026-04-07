@@ -77,32 +77,36 @@ function BlockItem({ block: rawBlock }: { block: ContentBlock }) {
         />
       );
 
-    case 'image':
+    case 'image': {
+      const imgUrl = block.url || block.image?.url || '';
+      const imgAlt = block.alt || block.image?.alt || '';
+      const imgCaption = block.caption || block.image?.caption || '';
+      if (!imgUrl) return null;
       return (
         <figure className="my-6">
-          {block.url && (
-            <img
-              src={block.url}
-              alt={block.alt ?? ''}
-              className="w-full rounded-xl object-cover"
-            />
-          )}
-          {block.caption && (
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imgUrl}
+            alt={imgAlt}
+            className="w-full rounded-xl object-cover max-h-[500px]"
+            referrerPolicy="no-referrer"
+            loading="lazy"
+          />
+          {imgCaption && (
             <figcaption className="text-center text-sm text-on-surface-variant mt-2 italic">
-              {block.caption}
+              {imgCaption}
             </figcaption>
           )}
         </figure>
       );
+    }
 
     case 'list':
       if (block.style === 'ordered') {
         return (
           <ol className="space-y-4 my-8 list-decimal list-outside pl-6">
             {block.items?.map((item: string, i: number) => (
-              <li key={i} className="leading-relaxed">
-                {item}
-              </li>
+              <li key={i} className="leading-relaxed" dangerouslySetInnerHTML={{ __html: item }} />
             ))}
           </ol>
         );
@@ -112,7 +116,7 @@ function BlockItem({ block: rawBlock }: { block: ContentBlock }) {
           {block.items?.map((item: string, i: number) => (
             <li key={i} className="flex items-start gap-3">
               <span className="material-symbols-outlined text-primary mt-1">check_circle</span>
-              <span>{item}</span>
+              <span dangerouslySetInnerHTML={{ __html: item }} />
             </li>
           ))}
         </ul>
@@ -123,9 +127,7 @@ function BlockItem({ block: rawBlock }: { block: ContentBlock }) {
 
     case 'quote':
       return (
-        <blockquote className="border-l-4 border-primary bg-primary/5 p-6 rounded-r-xl italic my-8">
-          {block.text}
-        </blockquote>
+        <blockquote className="border-l-4 border-primary bg-primary/5 p-6 rounded-r-xl italic my-8" dangerouslySetInnerHTML={{ __html: block.text ?? '' }} />
       );
 
     case 'divider':

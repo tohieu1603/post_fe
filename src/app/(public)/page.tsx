@@ -245,8 +245,8 @@ function PromoBanner() {
 export default async function HomePage() {
   const [featuredRes, latestRes, sectionsRes, mostViewedRes] = await Promise.allSettled([
     getFeatured(5),
-    getLatest(20, 1),
-    getHomeSections(6),
+    getLatest(30, 1),
+    getHomeSections(10),
     getMostViewed(8),
   ]);
 
@@ -260,7 +260,7 @@ export default async function HomePage() {
   const subFeatured = featured.slice(1, 4);
   // Feed: latest posts excluding top story and sub-featured
   const usedIds = new Set([topStory?._id, ...subFeatured.map((p: Post) => p._id)].filter(Boolean));
-  const feedPosts = latest.filter((p: Post) => !usedIds.has(p._id)).slice(0, 15);
+  const feedPosts = latest.filter((p: Post) => !usedIds.has(p._id)).slice(0, 25);
 
   // Sections: skip empty/test categories
   const validSections = sections
