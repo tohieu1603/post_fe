@@ -10,6 +10,9 @@ import { NewsletterForm } from '@/components/newsletter-form';
 import { formatDate, readingTimeText } from '@/lib/utils';
 import type { Post } from '@/lib/types';
 import { CommentSection } from '@/components/comment-section';
+import { ComparisonLayout } from '@/components/comparison-layout';
+import { ComparisonLayout2 } from '@/components/comparison-layout2';
+import { ComparisonLayout3 } from '@/components/comparison-layout3';
 
 // ─── Metadata ────────────────────────────────────────────────────────────────
 
@@ -112,6 +115,17 @@ export default async function ArticleDetailPage({
 
   // FAQ from post field (separate from content blocks)
   const faqItems = post.faq ?? [];
+
+  // Comparison layouts
+  if (post.template === 'comparison3') {
+    return <ComparisonLayout3 post={post} relatedPosts={relatedPosts} mostViewed={mostViewed} />;
+  }
+  if (post.template === 'comparison2') {
+    return <ComparisonLayout2 post={post} relatedPosts={relatedPosts} mostViewed={mostViewed} />;
+  }
+  if (post.articleType === 'comparison') {
+    return <ComparisonLayout post={post} relatedPosts={relatedPosts} mostViewed={mostViewed} />;
+  }
 
   return (
     <>
@@ -426,14 +440,7 @@ export default async function ArticleDetailPage({
               {/* TOC Sidebar (client component) */}
               {toc.length > 0 && <TocSidebar items={toc} />}
 
-              {/* Newsletter Card */}
-              <div className="rounded-lg p-5 text-white" style={{ background: 'linear-gradient(135deg, #065f46, #064e3b)' }}>
-                <h4 className="text-base font-bold mb-1.5">Bản tin AI hàng ngày</h4>
-                <p className="text-xs mb-4 leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                  Tin tức AI quan trọng nhất, gửi thẳng vào hộp thư mỗi sáng.
-                </p>
-                <NewsletterForm vertical />
-              </div>
+              {/* Newsletter removed */}
 
               {/* Most Viewed Widget */}
               {mostViewed.length > 0 && (

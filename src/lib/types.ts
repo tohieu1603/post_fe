@@ -27,6 +27,8 @@ export interface Post {
   isTrending: boolean;
   isBreaking: boolean;
   articleType: string;
+  template: string | null;
+  extras: any;
   language: string;
   imageAlt: string | null;
   createdAt: string;
