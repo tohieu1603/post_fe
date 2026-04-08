@@ -122,8 +122,8 @@ function applyBlockStyle(style: any): { className: string; inlineStyle: React.CS
   if (style.fontSize && fontSizeMap[style.fontSize]) css.fontSize = fontSizeMap[style.fontSize];
   const fontWeightMap: Record<string, number> = { normal: 400, medium: 500, semibold: 600, bold: 700 };
   if (style.fontWeight) css.fontWeight = fontWeightMap[style.fontWeight];
-  const textAlignMap = { left: 'left', center: 'center', right: 'right', justify: 'justify' };
-  if (style.textAlign) css.textAlign = textAlignMap[style.textAlign] as any;
+  const textAlignMap: Record<string, string> = { left: 'left', center: 'center', right: 'right', justify: 'justify' };
+  if (style.textAlign) css.textAlign = textAlignMap[style.textAlign as string] as any;
 
   // Animation
   const animMap: Record<string, string> = { 'fade-in': 'animate-fade-in', 'slide-up': 'animate-slide-up', 'slide-left': 'animate-slide-left', 'zoom-in': 'animate-zoom-in', 'bounce': 'animate-bounce' };
